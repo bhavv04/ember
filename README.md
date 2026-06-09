@@ -1,4 +1,4 @@
-# Ember 🔥
+# Ember 
 
 A calorie deficit visualizer. Not a calorie tracker — a tool that makes the math of weight loss visceral and concrete.
 
