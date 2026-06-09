@@ -37,22 +37,34 @@ export default function SettingsPage() {
     setCalculatedTdee(tdee)
   }
 
-  async function handleSubmit() {
+    async function handleSubmit() {
     if (!calculatedTdee) return
     setLoading(true)
 
-    await fetch("/api/goals", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        startWeightKg: parseFloat(currentWeight),
-        targetWeightKg: parseFloat(targetWeight),
-        baselineTdee: calculatedTdee,
-      }),
-    })
+    try {
+        const res = await fetch("/api/goals", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            startWeightKg: parseFloat(currentWeight),
+            targetWeightKg: parseFloat(targetWeight),
+            baselineTdee: calculatedTdee,
+        }),
+        })
 
-    router.push("/dashboard")
-  }
+        if (!res.ok) {
+        const text = await res.text()
+        throw new Error(`Failed to save goal: ${res.status} ${text}`)
+        }
+
+        router.push("/dashboard")
+    } catch (err) {
+        console.error(err)
+        // optionally surface this to the user with a toast
+    } finally {
+        setLoading(false)
+    }
+    }
 
   return (
     <div className="min-h-screen flex items-center justify-center p-6">

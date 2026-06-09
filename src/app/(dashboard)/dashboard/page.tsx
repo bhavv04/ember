@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { KCAL_PER_KG } from "@/lib/constants"
+import { ACTIVITIES, KCAL_PER_KG } from "@/lib/constants"
 
 interface Goal {
   id: string
@@ -137,27 +137,34 @@ export default function DashboardPage() {
         </Card>
       )}
 
-      {/* Activity equivalents */}
-      <Card>
+        {/* Activity equivalents */}
+        <Card>
         <CardHeader>
-          <CardTitle>To burn the rest you could</CardTitle>
+            <CardTitle>To burn the rest you could</CardTitle>
+            <p className="text-sm text-muted-foreground">
+            Based on {remaining.toLocaleString()} kcal remaining
+            </p>
         </CardHeader>
-        <CardContent className="space-y-3">
-          {[
-            { label: "Walk", value: `${walkingHours} hours`, sub: "~280 kcal/hr" },
-            { label: "Treadmill (moderate)", value: `${treadmillHours} hours`, sub: "~400 kcal/hr" },
-            { label: "Cycling", value: `${cyclingHours} hours`, sub: "~450 kcal/hr" },
-          ].map((item) => (
-            <div key={item.label} className="flex items-center justify-between p-3 rounded-lg bg-muted">
-              <div>
-                <p className="font-medium">{item.label}</p>
-                <p className="text-xs text-muted-foreground">{item.sub}</p>
-              </div>
-              <p className="text-xl font-bold">{item.value}</p>
+        <CardContent className="space-y-2">
+            {ACTIVITIES.map((activity) => (
+            <div
+                key={activity.label}
+                className="flex items-center justify-between p-3 rounded-lg bg-muted"
+            >
+                <div>
+                <p className="font-medium text-sm">{activity.label}</p>
+                <p className="text-xs text-muted-foreground">
+                    {activity.sub(remaining)}
+                </p>
+                </div>
+                <div className="text-right">
+                <p className="text-xl font-bold">{activity.convert(remaining)}</p>
+                <p className="text-xs text-muted-foreground">{activity.unit}</p>
+                </div>
             </div>
-          ))}
+            ))}
         </CardContent>
-      </Card>
+        </Card>
 
       {/* Quick actions */}
       <div className="grid grid-cols-2 gap-3">

@@ -1,8 +1,8 @@
 import { auth } from "@clerk/nextjs/server"
-import { NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
 import { db } from "@/lib/db"
 
-export async function GET() {
+export const GET = async (_req: NextRequest) => {
   const { userId } = await auth()
   if (!userId) return new NextResponse("Unauthorized", { status: 401 })
 
@@ -14,7 +14,7 @@ export async function GET() {
   return NextResponse.json(logs ?? [])
 }
 
-export async function POST(req: Request) {
+export const POST = async (req: NextRequest) => {
   const { userId } = await auth()
   if (!userId) return new NextResponse("Unauthorized", { status: 401 })
 
@@ -34,4 +34,3 @@ export async function POST(req: Request) {
 
   return NextResponse.json(log)
 }
-
