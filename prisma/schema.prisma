@@ -1,0 +1,42 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Goal {
+  id             String     @id @default(cuid())
+  userId         String     @unique
+  targetWeightKg Float
+  startWeightKg  Float
+  startDate      DateTime   @default(now())
+  baselineTdee   Int
+  createdAt      DateTime   @default(now())
+
+  dailyLogs      DailyLog[]
+  weighIns       WeighIn[]
+}
+
+model DailyLog {
+  id            String   @id @default(cuid())
+  userId        String
+  date          DateTime
+  caloriesEaten Int
+  tdeeForDay    Int
+  netDeficit    Int
+  createdAt     DateTime @default(now())
+
+  goal          Goal     @relation(fields: [userId], references: [userId])
+}
+
+model WeighIn {
+  id        String   @id @default(cuid())
+  userId    String
+  date      DateTime
+  weightKg  Float
+  createdAt DateTime @default(now())
+
+  goal      Goal     @relation(fields: [userId], references: [userId])
+}
