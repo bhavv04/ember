@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ACTIVITIES, KCAL_PER_KG } from "@/lib/constants"
+import Navbar from "@/app/homepage/components/Navbar"
 
 interface Goal {
   id: string
@@ -81,7 +82,8 @@ export default function DashboardPage() {
     : null
 
   return (
-    <div className="min-h-screen p-6 max-w-2xl mx-auto space-y-6">
+    <div className="min-h-screen p-6 max-w-2xl mx-auto space-y-6 mt-18">
+      <Navbar />
       <div>
         <h1 className="text-3xl font-bold">Your ember</h1>
         <p className="text-muted-foreground mt-1">
