@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { useUser, UserButton } from "@clerk/nextjs"
+import { ThemeToggle } from "@/components/ui/theme-toggle"
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
@@ -25,7 +26,7 @@ export default function Navbar() {
       <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
           <img src="/ember.png" alt="Ember Logo" className="w-8 h-8" />
-          <span className="font-bold text-gray-950 tracking-tight">ember</span>
+          <span className="font-bold text-foreground tracking-tight">ember</span>
         </Link>
 
         <div className="hidden md:flex items-center gap-8">
@@ -42,6 +43,7 @@ export default function Navbar() {
             <div className="w-8 h-8 rounded-full bg-gray-100 animate-pulse" />
           ) : isSignedIn ? (
             <>
+            <ThemeToggle />
               <UserButton afterSignOutUrl="/" />
             </>
           ) : (
