@@ -7,15 +7,40 @@ export function ThemeToggle() {
   const { theme, setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
 
+  const toggleTheme = (e: React.MouseEvent) => {
+    const x = e.clientX;
+    const y = e.clientY;
+
+    document.documentElement.style.setProperty("--x", `${x}px`);
+    document.documentElement.style.setProperty("--y", `${y}px`);
+
+    if (!document.startViewTransition) {
+        setTheme(theme === "dark" ? "light" : "dark");
+        return;
+    }
+
+    document.startViewTransition(() => {
+        const root = document.documentElement;
+        if (root.classList.contains("dark")) {
+        root.classList.remove("dark");
+        setTheme("light");
+        } else {
+        root.classList.add("dark");
+        setTheme("dark");
+        }
+    });
+    };
+
   useEffect(() => setMounted(true), [])
 
   if (!mounted) return <div className="w-8 h-8" />
 
   return (
+    // Change the button's onClick to pass the event:
     <button
-      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-      className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-500 hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-gray-100 transition-colors"
-      aria-label="Toggle theme"
+    onClick={(e) => toggleTheme(e)}   // was: () => setTheme(...)
+    className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-500 hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-gray-100 transition-colors"
+    aria-label="Toggle theme"
     >
       {theme === "dark" ? (
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">

@@ -27,7 +27,7 @@ export default function Hero() {
   }, [])
 
   return (
-    <section className="min-h-screen bg-background flex flex-col justify-center px-6 pt-16">
+    <section className="min-h-screen bg-muted/40 flex flex-col justify-center px-6 pt-16">
       <div className="max-w-4xl mx-auto w-full">
         <div className="grid md:grid-cols-2 gap-24 items-center min-h-[85vh]">
 

@@ -19,9 +19,9 @@ export default function Navbar() {
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "bg-white/80 backdrop-blur-md border-b border-gray-100"
-          : "bg-transparent"
-      }`}
+            ? "bg-background/80 backdrop-blur-md border-b border-border"
+            : "bg-transparent"
+        }`}
     >
       <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
@@ -30,31 +30,28 @@ export default function Navbar() {
         </Link>
 
         <div className="hidden md:flex items-center gap-8">
-          <Link href="#how-it-works" className="text-sm text-gray-400 hover:text-gray-700 transition-colors">
+          <Link href="#how-it-works" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
             how it works
           </Link>
-          <Link href="#the-math" className="text-sm text-gray-400 hover:text-gray-700 transition-colors">
+          <Link href="#the-math" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
             the math
           </Link>
         </div>
 
         <div className="flex items-center gap-3">
           {!isLoaded ? (
-            <div className="w-8 h-8 rounded-full bg-gray-100 animate-pulse" />
+            <div className="w-8 h-8 rounded-full bg-muted animate-pulse" />
           ) : isSignedIn ? (
             <>
             <ThemeToggle />
-              <UserButton afterSignOutUrl="/" />
+            <UserButton afterSignOutUrl="/" />
             </>
           ) : (
             <>
-              <Link href="/sign-in" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">
+             <Link href="/sign-in" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                 sign in
               </Link>
-              <Link
-                href="/sign-up"
-                className="text-sm font-semibold px-4 py-2 rounded-lg bg-gray-950 text-white hover:bg-gray-800 transition-colors"
-              >
+              <Link href="/sign-up" className="text-sm font-semibold px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition-opacity">
                 get started
               </Link>
             </>
