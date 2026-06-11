@@ -1,42 +1,32 @@
+![ember](/public/ember.png)
+
 # Ember 
 
-A calorie deficit visualizer. Not a calorie tracker — a tool that makes the math of weight loss visceral and concrete.
+A calorie deficit visualizer. Set a weight loss goal, log your days, and watch the number burn down.
 
-## What it does
-
-- Set a weight loss goal and see the total calorie deficit required to reach it
-- Log daily calories eaten and track your net deficit over time
-- Weekly weigh-ins automatically recalibrate your TDEE
-- Visual progress tracker showing how far you've climbed the mountain
-- Activity equivalents — translates your remaining deficit into real-world effort (walking, treadmill, etc.)
-- Timeline projection — estimates your goal date based on current pace
+**[ember.app](https://ember.app)** · [Contributing](CONTRIBUTING.md) · [Security](SECURITY.md)
 
 ## Stack
 
-- **Framework** — Next.js 15 (App Router)
-- **Auth** — Clerk
-- **Database** — Neon (Postgres)
-- **ORM** — Prisma 7
-- **UI** — shadcn/ui + Tailwind CSS
-- **Deployment** — Vercel
+- **Next.js 16** — App Router
+- **Clerk** — Auth
+- **Neon** — Postgres
+- **Prisma 7** — ORM
+- **shadcn/ui + Tailwind** — UI
+- **Vercel** — Deployment
 
 ## Getting started
 
 ```bash
+git clone https://github.com/yourusername/ember
+cd ember
 npm install
 ```
 
-Set up your `.env` file:
+Copy `.env.example` to `.env` and fill in your keys:
 
-```env
-DATABASE_URL=your_neon_connection_string
-
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_key
-CLERK_SECRET_KEY=your_key
-NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
-NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
-NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/dashboard
-NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/dashboard
+```bash
+cp .env.example .env
 ```
 
 Push the database schema:
@@ -52,6 +42,16 @@ Run the dev server:
 npm run dev
 ```
 
+## Environment variables
+
+| Variable | Description |
+|---|---|
+| `DATABASE_URL` | Neon Postgres connection string |
+| `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` | Clerk publishable key |
+| `CLERK_SECRET_KEY` | Clerk secret key |
+
+See `.env.example` for the full list.
+
 ## Status
 
-🚧 In development
+🚧 In active development
