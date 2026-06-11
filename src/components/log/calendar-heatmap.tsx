@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import type { DailyLog } from "@/types"
 
@@ -7,16 +8,32 @@ interface Props {
   logs: DailyLog[]
 }
 
-function getColor(log: DailyLog | undefined) {
-  if (!log) return "bg-muted"
-  if (log.netDeficit >= 500) return "bg-green-500"
-  if (log.netDeficit >= 200) return "bg-green-400"
-  if (log.netDeficit > 0) return "bg-green-300"
-  if (log.netDeficit === 0) return "bg-yellow-400"
-  return "bg-red-400"
+interface Cell {
+  date: Date
+  key: string
+  log?: DailyLog
+}
+
+interface TooltipState {
+  cell: Cell
+  x: number
+  y: number
+}
+
+function getColorClass(log: DailyLog | undefined) {
+  if (!log) return "bg-muted hover:bg-muted/70"
+  if (log.netDeficit >= 700) return "bg-green-600 hover:bg-green-700"
+  if (log.netDeficit >= 400) return "bg-green-500 hover:bg-green-600"
+  if (log.netDeficit >= 100) return "bg-green-400 hover:bg-green-500"
+  if (log.netDeficit > 0) return "bg-green-300 hover:bg-green-400"
+  if (log.netDeficit === 0) return "bg-yellow-400 hover:bg-yellow-500"
+  if (log.netDeficit >= -200) return "bg-red-300 hover:bg-red-400"
+  return "bg-red-500 hover:bg-red-600"
 }
 
 export function CalendarHeatmap({ logs }: Props) {
+  const [tooltip, setTooltip] = useState<TooltipState | null>(null)
+
   const weeks = 16
   const days = weeks * 7
   const today = new Date()
@@ -28,7 +45,7 @@ export function CalendarHeatmap({ logs }: Props) {
     logMap.set(key, log)
   })
 
-  const cells = Array.from({ length: days }, (_, i) => {
+  const cells: Cell[] = Array.from({ length: days }, (_, i) => {
     const date = new Date(today)
     date.setDate(today.getDate() - (days - 1 - i))
     const key = date.toISOString().split("T")[0]
@@ -36,12 +53,12 @@ export function CalendarHeatmap({ logs }: Props) {
   })
 
   const firstDayOfWeek = cells[0].date.getDay()
-  const padded = [...Array(firstDayOfWeek).fill(null), ...cells]
+  const padded: (Cell | null)[] = [...Array(firstDayOfWeek).fill(null), ...cells]
   const totalCols = Math.ceil(padded.length / 7)
 
-  const grid: (typeof cells[0] | null)[][] = Array.from(
+  const grid: (Cell | null)[][] = Array.from(
     { length: totalCols },
-    (_, col) => padded.slice(col * 7, col * 7 + 7) as any
+    (_, col) => padded.slice(col * 7, col * 7 + 7)
   )
 
   const monthLabels: { label: string; col: number }[] = []
@@ -51,20 +68,24 @@ export function CalendarHeatmap({ logs }: Props) {
     if (cell.date.getDate() === 1 || i === firstDayOfWeek) {
       const label = cell.date.toLocaleDateString("en-CA", { month: "short" })
       const last = monthLabels[monthLabels.length - 1]
-      if (!last || last.label !== label) {
-        monthLabels.push({ label, col })
-      }
+      if (!last || last.label !== label) monthLabels.push({ label, col })
     }
   })
+
+  const dayLabels = ["S", "M", "T", "W", "T", "F", "S"]
 
   return (
     <Card>
       <CardHeader>
         <CardTitle className="text-base">Consistency</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-2 overflow-x-auto">
-        {/* Month labels */}
+      <CardContent className="space-y-2 overflow-x-auto relative">
+
         <div className="flex gap-1">
+          {/* Day label spacer */}
+          <div className="w-4 shrink-0" />
+
+          {/* Month labels */}
           {grid.map((_, colIdx) => {
             const month = monthLabels.find((m) => m.col === colIdx)
             return (
@@ -79,33 +100,99 @@ export function CalendarHeatmap({ logs }: Props) {
           })}
         </div>
 
-        {/* Grid */}
         <div className="flex gap-1">
+          {/* Day labels */}
+          <div className="flex flex-col gap-1 mr-0">
+            {dayLabels.map((d, i) => (
+              <div key={i} className="w-3 h-3 flex items-center justify-center">
+                {i % 2 === 1 && (
+                  <span className="text-muted-foreground" style={{ fontSize: "8px" }}>
+                    {d}
+                  </span>
+                )}
+              </div>
+            ))}
+          </div>
+
+          {/* Grid */}
           {grid.map((col, colIdx) => (
             <div key={colIdx} className="flex flex-col gap-1">
               {col.map((cell, rowIdx) => (
                 <div
                   key={rowIdx}
-                  title={
-                    cell
-                      ? `${cell.key}: ${cell.log ? `${cell.log.netDeficit > 0 ? "+" : ""}${cell.log.netDeficit} kcal` : "no log"}`
-                      : ""
-                  }
-                  className={`w-3 h-3 rounded-sm shrink-0 ${cell ? getColor(cell.log) : "opacity-0"}`}
+                  onMouseEnter={(e) => {
+                    if (!cell) return
+                    const rect = (e.target as HTMLElement).getBoundingClientRect()
+                    const parent = (e.target as HTMLElement)
+                      .closest(".relative")
+                      ?.getBoundingClientRect()
+                    if (parent) {
+                      setTooltip({
+                        cell,
+                        x: rect.left - parent.left + rect.width / 2,
+                        y: rect.top - parent.top - 8,
+                      })
+                    }
+                  }}
+                  onMouseLeave={() => setTooltip(null)}
+                  className={`w-3 h-3 rounded-sm shrink-0 transition-colors cursor-default ${
+                    cell ? getColorClass(cell.log) : "opacity-0 pointer-events-none"
+                  }`}
                 />
               ))}
             </div>
           ))}
         </div>
 
+        {/* Tooltip */}
+        {tooltip && (
+          <div
+            className="absolute z-50 pointer-events-none"
+            style={{
+              left: tooltip.x,
+              top: tooltip.y,
+              transform: "translate(-50%, -100%)",
+            }}
+          >
+            <div className="bg-popover border border-border rounded-lg px-3 py-2 shadow-md text-xs space-y-0.5 min-w-[140px]">
+              <p className="font-semibold text-foreground">
+                {tooltip.cell.date.toLocaleDateString("en-CA", {
+                  weekday: "short",
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
+                })}
+              </p>
+              {tooltip.cell.log ? (
+                <>
+                  <p className="text-muted-foreground">
+                    Eaten: {tooltip.cell.log.caloriesEaten.toLocaleString()} kcal
+                  </p>
+                  <p className={`font-semibold ${tooltip.cell.log.netDeficit > 0 ? "text-green-500" : "text-red-500"}`}>
+                    {tooltip.cell.log.netDeficit > 0 ? "+" : ""}
+                    {tooltip.cell.log.netDeficit.toLocaleString()} kcal
+                  </p>
+                </>
+              ) : (
+                <p className="text-muted-foreground">No log</p>
+              )}
+            </div>
+          </div>
+        )}
+
         {/* Legend */}
-        <div className="flex items-center gap-2 pt-1 flex-wrap">
+        <div className="flex items-center gap-2 pt-2 flex-wrap">
           <span className="text-xs text-muted-foreground">less</span>
-          {["bg-muted", "bg-green-300", "bg-green-400", "bg-green-500"].map((c) => (
+          {["bg-green-300", "bg-green-400", "bg-green-500", "bg-green-600"].map((c) => (
             <div key={c} className={`w-3 h-3 rounded-sm shrink-0 ${c}`} />
           ))}
           <span className="text-xs text-muted-foreground">more</span>
-          <div className="ml-4 flex items-center gap-1">
+          <div className="w-px h-3 bg-border mx-1" />
+          <div className="flex items-center gap-1">
+            <div className="w-3 h-3 rounded-sm bg-muted shrink-0" />
+            <span className="text-xs text-muted-foreground">no log</span>
+          </div>
+          <div className="flex items-center gap-1">
             <div className="w-3 h-3 rounded-sm bg-red-400 shrink-0" />
             <span className="text-xs text-muted-foreground">surplus</span>
           </div>
@@ -114,6 +201,7 @@ export function CalendarHeatmap({ logs }: Props) {
             <span className="text-xs text-muted-foreground">break even</span>
           </div>
         </div>
+
       </CardContent>
     </Card>
   )
