@@ -81,7 +81,7 @@ export default function DashboardPage() {
     : null
 
   return (
-    <div className="min-h-screen p-6 max-w-2xl mx-auto space-y-6 mt-18">
+    <div className="min-h-screen p-6 max-w-2xl mx-auto space-y-6">
       <div>
         <h1 className="text-3xl font-bold">Your ember</h1>
         <p className="text-muted-foreground mt-1">
