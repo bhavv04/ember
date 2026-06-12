@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import type { DailyLog } from "@/types"
+import { HeatmapGrid } from "@/components/log/heatmap-grid"
 
 interface Props {
   logs: DailyLog[]
@@ -263,55 +264,7 @@ export function CalendarHeatmap({ logs }: Props) {
         </div>
 
         {/* Heatmap — bleeds to card edges on mobile for max width */}
-        <div className="overflow-x-auto -mx-6 px-6">
-          {/* w-max so the grid doesn't compress; auto cell sizing fills available space */}
-          <div className="w-max">
-            {/* Month labels */}
-            <div className="flex gap-[3px] mb-[3px] pl-[18px]">
-              {grid.map((_, colIdx) => (
-                <div key={colIdx} className="w-[13px] shrink-0 overflow-visible">
-                  {monthLabels.has(colIdx) && (
-                    <span className="text-muted-foreground whitespace-nowrap text-[9px]">
-                      {monthLabels.get(colIdx)}
-                    </span>
-                  )}
-                </div>
-              ))}
-            </div>
-
-            <div className="flex gap-[3px]">
-              {/* Day labels */}
-              <div className="flex flex-col gap-[3px] mr-[1px]">
-                {DAY_LABELS.map((d, i) => (
-                  <div key={i} className="w-[13px] h-[13px] flex items-center justify-center">
-                    {i % 2 === 1 && (
-                      <span className="text-muted-foreground text-[8px]">{d}</span>
-                    )}
-                  </div>
-                ))}
-              </div>
-
-              {/* Columns */}
-              {grid.map((col, colIdx) => (
-                <div key={colIdx} className="flex flex-col gap-[3px]">
-                  {col.map((cell, rowIdx) =>
-                    cell ? (
-                      <div
-                        key={rowIdx}
-                        onMouseEnter={(e) => setTooltip({ cell, x: e.clientX, y: e.clientY })}
-                        onMouseMove={(e) => setTooltip((prev) => prev ? { ...prev, x: e.clientX, y: e.clientY } : null)}
-                        onMouseLeave={() => setTooltip(null)}
-                        className={`w-[13px] h-[13px] rounded-[2px] shrink-0 transition-colors ${getCellClass(cell)}`}
-                      />
-                    ) : (
-                      <div key={rowIdx} className="w-[13px] h-[13px] shrink-0 opacity-0 pointer-events-none" />
-                    )
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+        <HeatmapGrid grid={grid} monthLabels={monthLabels} />
 
         <Legend />
       </CardContent>
