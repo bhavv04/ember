@@ -13,7 +13,7 @@ interface Props {
 }
 
 export function CalendarHeatmap({ logs }: Props) {
-  const WEEKS = 16
+  const WEEKS = 36
   const DAYS = WEEKS * 7
   const today = new Date()
   today.setHours(0, 0, 0, 0)
