@@ -3,6 +3,10 @@
 import { useEffect, useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ACTIVITIES, KCAL_PER_KG } from "@/lib/constants"
+import { ProgressCard } from "@/components/dashboard/progress-card"
+import { TimelineCard } from "@/components/dashboard/timeline-card"
+import { ActivityCard } from "@/components/dashboard/activity-card"
+import { QuickActions } from "@/components/dashboard/quick-actions"
 
 interface Goal {
   id: string
@@ -80,107 +84,17 @@ export default function DashboardPage() {
       })
     : null
 
-  return (
-    <div className="min-h-screen p-6 max-w-2xl mx-auto space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold">Your ember</h1>
-        <p className="text-muted-foreground mt-1">
-          {weightToLose} kg to lose — {totalDeficit.toLocaleString()} kcal to burn
-        </p>
-      </div>
-
-      {/* Main progress card */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Progress</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Burned so far</span>
-              <span className="font-medium">{burnedSoFar.toLocaleString()} / {totalDeficit.toLocaleString()} kcal</span>
+    return (
+        <div className="min-h-screen p-6 max-w-2xl mx-auto space-y-6">
+            <div>
+            <h1 className="text-3xl font-bold">Your ember</h1>
+            <p className="text-muted-foreground mt-1">{weightToLose} kg to lose — {totalDeficit.toLocaleString()} kcal to burn</p>
             </div>
-            <div className="w-full bg-muted rounded-full h-4 overflow-hidden">
-              <div
-                className="h-4 rounded-full bg-orange-500 transition-all duration-700"
-                style={{ width: `${progressPercent}%` }}
-              />
-            </div>
-            <div className="flex justify-between text-xs text-muted-foreground">
-              <span>{progressPercent.toFixed(1)}% complete</span>
-              <span>{remaining.toLocaleString()} kcal remaining</span>
-            </div>
-          </div>
 
-          {/* The math */}
-          <div className="rounded-lg bg-muted p-4 text-sm space-y-1">
-            <p className="font-medium text-xs uppercase tracking-wide text-muted-foreground mb-2">The math</p>
-            <p>{weightToLose} kg × 7,700 kcal = <span className="font-bold">{totalDeficit.toLocaleString()} kcal total</span></p>
-            <p>Burned so far: <span className="font-bold">{burnedSoFar.toLocaleString()} kcal</span></p>
-            <p>Remaining: <span className="font-bold text-orange-500">{remaining.toLocaleString()} kcal</span></p>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Timeline */}
-      {projectedDate && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Projected goal date</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-3xl font-bold">{projectedDate}</p>
-            <p className="text-sm text-muted-foreground mt-1">
-              Based on your average daily deficit of {avgDailyDeficit.toFixed(0)} kcal — {daysRemaining} days from today
-            </p>
-          </CardContent>
-        </Card>
-      )}
-
-        {/* Activity equivalents */}
-        <Card>
-        <CardHeader>
-            <CardTitle>To burn the rest you could</CardTitle>
-            <p className="text-sm text-muted-foreground">
-            Based on {remaining.toLocaleString()} kcal remaining
-            </p>
-        </CardHeader>
-        <CardContent className="space-y-2">
-            {ACTIVITIES.map((activity) => (
-            <div
-                key={activity.label}
-                className="flex items-center justify-between p-3 rounded-lg bg-muted"
-            >
-                <div>
-                <p className="font-medium text-sm">{activity.label}</p>
-                <p className="text-xs text-muted-foreground">
-                    {activity.sub(remaining)}
-                </p>
-                </div>
-                <div className="text-right">
-                <p className="text-xl font-bold">{activity.convert(remaining)}</p>
-                <p className="text-xs text-muted-foreground">{activity.unit}</p>
-                </div>
-            </div>
-            ))}
-        </CardContent>
-        </Card>
-
-      {/* Quick actions */}
-      <div className="grid grid-cols-2 gap-3">
-        <a
-          href="/log"
-          className="flex items-center justify-center p-4 rounded-lg border border-border hover:bg-muted transition-colors text-sm font-medium"
-        >
-          + Log today
-        </a>
-        <a
-          href="/weigh-in"
-          className="flex items-center justify-center p-4 rounded-lg border border-border hover:bg-muted transition-colors text-sm font-medium"
-        >
-          + Weigh in
-        </a>
-      </div>
-    </div>
-  )
+            <ProgressCard weightToLose={weightToLose} totalDeficit={totalDeficit} burnedSoFar={burnedSoFar} remaining={remaining} progressPercent={progressPercent} />
+            {projectedDate && daysRemaining && <TimelineCard projectedDate={projectedDate} avgDailyDeficit={avgDailyDeficit} daysRemaining={daysRemaining} />}
+            <ActivityCard remaining={remaining} />
+            <QuickActions />
+        </div>
+    )
 }
