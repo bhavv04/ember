@@ -29,6 +29,7 @@ model DailyLog {
   createdAt     DateTime @default(now())
 
   goal          Goal     @relation(fields: [userId], references: [userId])
+  @@unique([userId, date])
 }
 
 model WeighIn {

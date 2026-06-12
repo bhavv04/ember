@@ -19,17 +19,17 @@ export function CalendarHeatmap({ logs }: Props) {
   today.setHours(0, 0, 0, 0)
 
   const logMap = new Map<string, DailyLog>()
-  logs.forEach((log) => {
-    const key = new Date(log.date).toISOString().split("T")[0]
-    logMap.set(key, log)
-  })
+    logs.forEach((log) => {
+    logMap.set(log.date, log) // log.date is already "2026-06-12" from the normalised GET
+    })
 
-  const cells: Cell[] = Array.from({ length: DAYS }, (_, i) => {
+    const cells: Cell[] = Array.from({ length: DAYS }, (_, i) => {
     const date = new Date(today)
     date.setDate(today.getDate() - (DAYS - 1 - i))
-    const key = date.toISOString().split("T")[0]
+    // Build key in local time, not UTC
+    const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`
     return { date, key, log: logMap.get(key), isFuture: date > today }
-  })
+    })
 
   const stats = computeStats(cells)
 
@@ -58,7 +58,7 @@ export function CalendarHeatmap({ logs }: Props) {
 
   return (
     <Card>
-      <CardHeader className="pb-3">
+      <CardHeader className="">
         <div className="flex items-baseline justify-between">
           <CardTitle className="text-base">Consistency</CardTitle>
           <span className="text-[11px] text-muted-foreground">{rangeStart} – {rangeEnd}</span>
