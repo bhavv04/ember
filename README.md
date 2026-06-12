@@ -1,5 +1,3 @@
-![ember](/public/ember.png)
-
 # Ember 
 
 A calorie deficit visualizer. Set a weight loss goal, log your days, and watch the number burn down.
@@ -18,7 +16,7 @@ A calorie deficit visualizer. Set a weight loss goal, log your days, and watch t
 ## Getting started
 
 ```bash
-git clone https://github.com/yourusername/ember
+git clone https://github.com/bhavv04/ember
 cd ember
 npm install
 ```
