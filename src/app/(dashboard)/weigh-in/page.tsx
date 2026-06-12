@@ -42,8 +42,8 @@ export default function WeighInPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6">
-      <div className="w-full max-w-md space-y-6">
+    <div className="min-h-screen bg-background">
+      <div className="max-w-2xl mx-auto px-4 sm:px-6 py-10 space-y-4">
         <div>
           <h1 className="text-3xl font-bold">Weigh in</h1>
           <p className="text-muted-foreground mt-1">

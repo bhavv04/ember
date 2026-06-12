@@ -28,7 +28,7 @@ export default function DashboardNavbar() {
         <div className="max-w-2xl mx-auto px-6 h-14 flex items-center justify-between">
 
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2">
+          <Link href="/dashboard" className="flex items-center gap-2">
             <img src="/ember.png" alt="Ember Logo" className="w-8 h-8" />
             <span className="font-bold text-foreground tracking-tight text-sm">ember</span>
           </Link>
