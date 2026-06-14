@@ -22,7 +22,7 @@ export const GET = async (req: NextRequest) => {
     orderBy: { date: "desc" },
   })
   const seen = new Set<string>()
-  const deduplicated = logs.filter((log) => {
+  const deduplicated = logs.filter((log: (typeof logs)[number]) => {
     const day = log.date.toISOString().split("T")[0]
     if (seen.has(day)) return false
     seen.add(day)

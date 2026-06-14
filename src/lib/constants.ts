@@ -16,7 +16,6 @@ export const ACTIVITY_LABELS: Record<string, string> = {
   very_active: "Athlete (2x training per day)",
 }
 
-// Add this to your constants.ts
 export const ACTIVITIES = [
   {
     label: "Walking",
