@@ -28,7 +28,7 @@ export const GET = async (req: NextRequest) => {
     seen.add(day)
     return true
   })
-  return NextResponse.json(deduplicated.map((log) => ({
+  return NextResponse.json(deduplicated.map((log: (typeof deduplicated)[number]) => ({
     ...log,
     date: log.date.toISOString().split("T")[0],
   })))
