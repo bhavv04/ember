@@ -37,8 +37,6 @@ export default function DashboardPage() {
       const goalData = await goalRes.json()
       const logsData: DailyLog[] = await logsRes.json()
 
-      // Deduplicate — keep only the first (latest) entry per calendar day.
-      // The API returns logs ordered by date desc so the first hit per day is always the newest.
       const seen = new Set<string>()
       const uniqueLogs = logsData.filter((log) => {
         const day = log.date.split("T")[0]
@@ -57,7 +55,10 @@ export default function DashboardPage() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p className="text-muted-foreground">Loading...</p>
+        <div className="space-y-2 text-center">
+          <div className="w-7 h-7 rounded-full border-2 border-orange-500 border-t-transparent animate-spin mx-auto" />
+          <p className="text-sm text-muted-foreground">Loading your ember...</p>
+        </div>
       </div>
     )
   }
@@ -65,12 +66,11 @@ export default function DashboardPage() {
   if (!goal) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p className="text-muted-foreground">
-          No goal found.{" "}
-          <a href="/settings" className="underline">
-            Set one up
-          </a>
-        </p>
+        <div className="text-center space-y-3">
+          <p className="text-4xl">🔥</p>
+          <p className="font-semibold">No goal set yet</p>
+          <a href="/settings" className="text-sm text-orange-500 underline">Set one up</a>
+        </div>
       </div>
     )
   }
@@ -78,45 +78,72 @@ export default function DashboardPage() {
   const weightToLose = goal.startWeightKg - goal.targetWeightKg
   const totalDeficit = weightToLose * KCAL_PER_KG
   const burnedSoFar = logs.reduce((sum, log) => sum + log.netDeficit, 0)
-  const remaining = totalDeficit - burnedSoFar
+  const remaining = Math.max(totalDeficit - burnedSoFar, 0)
   const progressPercent = Math.min((burnedSoFar / totalDeficit) * 100, 100)
-
-  const avgDailyDeficit =
-    logs.length > 0 ? burnedSoFar / logs.length : goal.baselineTdee - 2000
-  const daysRemaining =
-    avgDailyDeficit > 0 ? Math.ceil(remaining / avgDailyDeficit) : null
+  const avgDailyDeficit = logs.length > 0 ? burnedSoFar / logs.length : goal.baselineTdee - 2000
+  const daysRemaining = avgDailyDeficit > 0 ? Math.ceil(remaining / avgDailyDeficit) : null
   const projectedDate = daysRemaining
-    ? new Date(Date.now() + daysRemaining * 86400000).toLocaleDateString(
-        "en-CA",
-        { year: "numeric", month: "long", day: "numeric" }
-      )
+    ? new Date(Date.now() + daysRemaining * 86400000).toLocaleDateString("en-CA", {
+        year: "numeric", month: "long", day: "numeric",
+      })
     : null
 
   return (
-    <div className="min-h-screen p-6 max-w-2xl mx-auto space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold">Your ember</h1>
-        <p className="text-muted-foreground mt-1">
-          {weightToLose} kg to lose — {totalDeficit.toLocaleString()} kcal to burn
-        </p>
-      </div>
+    <div className="min-h-screen bg-background">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 space-y-4">
 
-      <ProgressCard
-        weightToLose={weightToLose}
-        totalDeficit={totalDeficit}
-        burnedSoFar={burnedSoFar}
-        remaining={remaining}
-        progressPercent={progressPercent}
-      />
-      {projectedDate && daysRemaining && (
-        <TimelineCard
-          projectedDate={projectedDate}
-          avgDailyDeficit={avgDailyDeficit}
-          daysRemaining={daysRemaining}
-        />
-      )}
-      <ActivityCard remaining={remaining} />
-      <QuickActions />
+        {/* Header */}
+        <div className="flex items-start justify-between pb-2">
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight">Your ember</h1>
+            <p className="text-sm text-muted-foreground mt-0.5">
+              {weightToLose} kg goal · {totalDeficit.toLocaleString()} kcal mountain
+            </p>
+          </div>
+          <p className="text-xs text-muted-foreground mt-1">
+            {new Date().toLocaleDateString("en-CA", { weekday: "short", month: "short", day: "numeric" })}
+          </p>
+        </div>
+
+        {/* Quick actions always visible at top */}
+        <QuickActions />
+
+        {/* Main bento grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+
+          {/* Progress — takes full width on mobile, 2 cols on desktop */}
+          <div className="lg:col-span-2">
+            <ProgressCard
+              weightToLose={weightToLose}
+              totalDeficit={totalDeficit}
+              burnedSoFar={burnedSoFar}
+              remaining={remaining}
+              progressPercent={progressPercent}
+            />
+          </div>
+
+          {/* Timeline — 1 col */}
+          <div className="lg:col-span-1">
+            {projectedDate && daysRemaining ? (
+              <TimelineCard
+                projectedDate={projectedDate}
+                avgDailyDeficit={avgDailyDeficit}
+                daysRemaining={daysRemaining}
+              />
+            ) : (
+              <div className="rounded-2xl border border-border bg-card p-6 h-full flex flex-col justify-center items-center text-center gap-2">
+                <p className="text-3xl">📈</p>
+                <p className="text-sm font-medium">No projection yet</p>
+                <p className="text-xs text-muted-foreground">Log a few days to see your projected goal date</p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Activity card — full width */}
+        <ActivityCard remaining={remaining} />
+
+      </div>
     </div>
   )
 }

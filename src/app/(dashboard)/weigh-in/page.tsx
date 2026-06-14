@@ -1,101 +1,97 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useRouter } from "next/navigation"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-
-interface WeighIn {
-  id: string
-  date: string
-  weightKg: number
-}
+import { WeightForm } from "@/components/weigh-in/weight-form"
+import { WeightChart } from "@/components/weigh-in/weight-chart"
+import { WeightHistory } from "@/components/weigh-in/weight-history"
+import type { WeighIn, Goal } from "@/types"
 
 export default function WeighInPage() {
-  const router = useRouter()
-  const [weight, setWeight] = useState("")
-  const [loading, setLoading] = useState(false)
   const [history, setHistory] = useState<WeighIn[]>([])
+  const [goal, setGoal] = useState<Goal | null>(null)
+  const [fetching, setFetching] = useState(true)
 
   useEffect(() => {
-    async function fetchHistory() {
-      const res = await fetch("/api/weigh-ins")
-      const data = await res.json()
-      setHistory(data)
+    async function fetchData() {
+      const [weighInsRes, goalRes] = await Promise.all([
+        fetch("/api/weigh-ins"),
+        fetch("/api/goals"),
+      ])
+      setHistory(await weighInsRes.json())
+      setGoal(await goalRes.json())
+      setFetching(false)
     }
-    fetchHistory()
+    fetchData()
   }, [])
 
-  async function handleSubmit() {
-    if (!weight) return
-    setLoading(true)
-
-    await fetch("/api/weigh-ins", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ weightKg: parseFloat(weight) }),
-    })
-
-    router.push("/dashboard")
+  function handleSaved(entry: WeighIn) {
+    setHistory((prev) => [entry, ...prev])
   }
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="max-w-2xl mx-auto px-4 sm:px-6 py-10 space-y-4">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 space-y-6">
+
+        {/* Header */}
         <div>
-          <h1 className="text-3xl font-bold">Weigh in</h1>
-          <p className="text-muted-foreground mt-1">
-            Weekly weigh-ins help Ember recalibrate your TDEE
+          <h1 className="text-2xl font-bold tracking-tight">Weigh in</h1>
+          <p className="text-sm text-muted-foreground mt-0.5">
+            Weekly weigh-ins recalibrate your TDEE automatically
           </p>
         </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Today's weight</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Label>Weight (kg)</Label>
-              <Input
-                type="number"
-                step="0.1"
-                placeholder="e.g. 88.5"
-                value={weight}
-                onChange={(e) => setWeight(e.target.value)}
-              />
-            </div>
+        {/* Top row — form + quick stats */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="md:col-span-2">
+            <WeightForm
+              baselineTdee={goal?.baselineTdee}
+              onSaved={handleSaved}
+            />
+          </div>
 
-            <Button
-              className="w-full"
-              disabled={!weight || loading}
-              onClick={handleSubmit}
-            >
-              {loading ? "Saving..." : "Save weigh-in"}
-            </Button>
-          </CardContent>
-        </Card>
-
-        {history.length > 0 && (
-          <Card>
-            <CardHeader>
-              <CardTitle>History</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              {history.slice(0, 6).map((entry) => (
-                <div key={entry.id} className="flex justify-between text-sm py-2 border-b border-border last:border-0">
-                  <span className="text-muted-foreground">
-                    {new Date(entry.date).toLocaleDateString("en-CA", {
-                      month: "short", day: "numeric"
-                    })}
-                  </span>
-                  <span className="font-medium">{entry.weightKg} kg</span>
+          {/* Quick stats */}
+          {!fetching && goal && history.length > 0 && (
+            <div className="flex flex-col gap-3">
+              {[
+                {
+                  label: "Start weight",
+                  value: `${goal.startWeightKg} kg`,
+                },
+                {
+                  label: "Current",
+                  value: `${history[0]?.weightKg ?? "—"} kg`,
+                },
+                {
+                  label: "Target",
+                  value: `${goal.targetWeightKg} kg`,
+                },
+              ].map((s) => (
+                <div
+                  key={s.label}
+                  className="rounded-xl border border-border bg-card px-4 py-3 flex-1"
+                >
+                  <p className="text-xs text-muted-foreground uppercase tracking-widest mb-1">
+                    {s.label}
+                  </p>
+                  <p className="text-xl font-bold tabular-nums">{s.value}</p>
                 </div>
               ))}
-            </CardContent>
-          </Card>
+            </div>
+          )}
+        </div>
+
+        {/* Chart */}
+        {!fetching && goal && history.length >= 2 && (
+          <WeightChart
+            history={history}
+            startWeightKg={goal.startWeightKg}
+            targetWeightKg={goal.targetWeightKg}
+          />
         )}
+
+        {/* History */}
+        {!fetching && <WeightHistory history={history} />}
+
       </div>
     </div>
   )
