@@ -13,9 +13,9 @@ export function ActivityCard({ remaining }: Props) {
         Based on <span className="text-ember-amber">{remaining.toLocaleString()} kcal</span> remaining
       </p>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-px bg-ember-card-border rounded-2xl overflow-hidden">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 bg-ember-card ">
             {ACTIVITIES.map(({ label, Icon, convert, unit }) => (
-            <div key={label} className="bg-ember-card p-5 flex flex-col gap-3">
+            <div key={label} className="bg-ember-forest-pale p-4 rounded-2xl flex flex-col gap-3">
                 <Icon size={18} className="text-ember-amber" strokeWidth={1.5} />
                 <p className="text-ember-muted text-xs">{label}</p>
                 <div className="mt-auto">
