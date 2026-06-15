@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { useUser, UserButton } from "@clerk/nextjs"
 import { ThemeToggle } from "@/components/ui/theme-toggle"
 
@@ -16,20 +17,28 @@ export default function Navbar() {
   }, [])
 
   return (
-    <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled
-            ? "bg-background/80 backdrop-blur-md border-b border-border"
-            : "bg-transparent"
-        }`}
-    >
-      <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2">
-          <img src="/ember.png" alt="Ember Logo" className="w-8 h-8" />
-          <span className="font-bold text-foreground tracking-tight">ember</span>
+    <div className="fixed top-0 left-0 right-0 z-50 flex justify-center px-6 pt-4">
+      <nav
+        className={`
+          w-full max-w-3xl h-12 flex items-center justify-between
+          px-2 rounded-full border transition-all duration-300 backdrop-blur-xl
+          ${scrolled
+            ? "bg-background/55 backdrop-blur-xl border-border shadow-sm"
+            : "bg-background/10 backdrop-blur-xl shadow-xl text-white"
+          }
+        `}
+      >
+        {/* Logo */}
+        <Link href="/" className="flex items-center gap-2 pl-2">
+          <Image src="/ember.png" alt="Ember Logo" width={28} height={28} className="rounded-full" />
+            <span className="text-sm font-bold tracking-tight text-secondary-foreground">
+                ember 
+                <span className="text-orange-400 font-bold">.</span>
+            </span>
         </Link>
 
-        <div className="hidden md:flex items-center gap-8">
+        {/* Nav links */}
+        <div className="hidden md:flex items-center gap-6">
           <Link href="#how-it-works" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
             how it works
           </Link>
@@ -38,26 +47,33 @@ export default function Navbar() {
           </Link>
         </div>
 
-        <div className="flex items-center gap-3">
+        {/* Actions */}
+        <div className="flex items-center gap-1 pr-1">
           {!isLoaded ? (
-            <div className="w-8 h-8 rounded-full bg-muted animate-pulse" />
+            <div className="w-7 h-7 rounded-full bg-muted animate-pulse" />
           ) : isSignedIn ? (
             <>
-            <ThemeToggle />
-            <UserButton afterSignOutUrl="/" />
+              <ThemeToggle />
+              <UserButton afterSignOutUrl="/" />
             </>
           ) : (
             <>
-             <Link href="/sign-in" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+              <Link
+                href="/sign-in"
+                className="text-xs text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5"
+              >
                 sign in
               </Link>
-              <Link href="/sign-up" className="text-sm font-semibold px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition-opacity">
+              <Link
+                href="/sign-up"
+                className="text-xs font-semibold px-4 py-2 rounded-full bg-secondary-foreground text-background hover:opacity-80 transition-opacity"
+              >
                 get started
               </Link>
             </>
           )}
         </div>
-      </div>
-    </nav>
+      </nav>
+    </div>
   )
 }
