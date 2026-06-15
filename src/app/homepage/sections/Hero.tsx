@@ -28,7 +28,7 @@ export default function Hero() {
           <h1 className="font-serif text-[clamp(40px,6vw,72px)] font-normal leading-[1.05] text-white max-w-2xl mb-9">
             The mountain gets smaller<br />
             every single{" "}
-            <em className="italic text-orange-400" style={{ fontStyle: "italic" }}>
+            <em className="italic text-orange-400">
               day.
             </em>
           </h1>
