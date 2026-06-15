@@ -4,7 +4,6 @@ import { useState, useEffect } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { useUser, UserButton } from "@clerk/nextjs"
-import { ThemeToggle } from "@/components/ui/theme-toggle"
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
@@ -23,26 +22,26 @@ export default function Navbar() {
           w-full max-w-3xl h-12 flex items-center justify-between
           px-2 rounded-full border transition-all duration-300 backdrop-blur-xl
           ${scrolled
-            ? "bg-background/55 backdrop-blur-xl border-border shadow-sm"
-            : "bg-background/10 backdrop-blur-xl shadow-xl text-white"
+            ? "bg-white/55 border-border shadow-sm"
+            : "bg-white/10 border-transparent shadow-xl"
           }
         `}
       >
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 pl-2">
           <Image src="/ember.png" alt="Ember Logo" width={28} height={28} className="rounded-full" />
-            <span className="text-sm font-bold tracking-tight text-secondary-foreground">
-                ember 
-                <span className="text-orange-400 font-bold">.</span>
-            </span>
+          <span className="text-sm font-bold tracking-tight text-gray-800">
+            ember
+            <span className="text-orange-400 font-bold">.</span>
+          </span>
         </Link>
 
         {/* Nav links */}
         <div className="hidden md:flex items-center gap-6">
-          <Link href="#how-it-works" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+          <Link href="#how-it-works" className="text-sm text-gray-500 hover:text-gray-800 transition-colors">
             how it works
           </Link>
-          <Link href="#the-math" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+          <Link href="#the-math" className="text-sm text-gray-500 hover:text-gray-800 transition-colors">
             the math
           </Link>
         </div>
@@ -50,23 +49,20 @@ export default function Navbar() {
         {/* Actions */}
         <div className="flex items-center gap-1 pr-1">
           {!isLoaded ? (
-            <div className="w-7 h-7 rounded-full bg-muted animate-pulse" />
+            <div className="w-7 h-7 rounded-full bg-gray-200 animate-pulse" />
           ) : isSignedIn ? (
-            <>
-              <ThemeToggle />
-              <UserButton afterSignOutUrl="/" />
-            </>
+            <UserButton afterSignOutUrl="/" />
           ) : (
             <>
               <Link
                 href="/sign-in"
-                className="text-xs text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5"
+                className="text-xs text-gray-500 hover:text-gray-800 transition-colors px-3 py-1.5"
               >
                 sign in
               </Link>
               <Link
                 href="/sign-up"
-                className="text-xs font-semibold px-4 py-2 rounded-full bg-secondary-foreground text-background hover:opacity-80 transition-opacity"
+                className="text-xs font-semibold px-4 py-2 rounded-full bg-orange-500 hover:bg-orange-400 transition-colors text-white hover:opacity-80 transition-opacity"
               >
                 get started
               </Link>
