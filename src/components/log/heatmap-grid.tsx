@@ -22,16 +22,16 @@ interface Props {
 }
 
 function getCellClass(cell: Cell): string {
-  if (cell.isFuture) return "bg-muted/40 cursor-default"
-  if (!cell.log) return "bg-muted hover:bg-muted/70 cursor-default"
+  if (cell.isFuture) return "bg-ember-forest-pale/40 cursor-default"
+  if (!cell.log)     return "bg-ember-forest-pale cursor-default"
   const d = cell.log.netDeficit
-  if (d >= 700)  return "bg-green-800 hover:bg-green-900"
-  if (d >= 400)  return "bg-green-600 hover:bg-green-700"
-  if (d >= 100)  return "bg-green-400 hover:bg-green-500"
-  if (d > 0)     return "bg-green-200 hover:bg-green-300"
-  if (d === 0)   return "bg-yellow-400 hover:bg-yellow-500"
-  if (d >= -200) return "bg-red-300 hover:bg-red-400"
-  return "bg-red-500 hover:bg-red-600"
+  if (d >= 700)  return "bg-ember-forest hover:brightness-110"
+  if (d >= 400)  return "bg-ember-forest-light hover:brightness-110"
+  if (d >= 100)  return "bg-ember-forest-mid hover:brightness-110"
+  if (d > 0)     return "bg-ember-forest-pale hover:brightness-95"
+  if (d === 0)   return "bg-ember-amber/40 hover:bg-ember-amber/50"
+  if (d >= -200) return "bg-ember-amber/60 hover:bg-ember-amber/70"
+  return "bg-ember-amber hover:brightness-110"
 }
 
 function Tooltip({ state }: { state: TooltipState }) {
@@ -53,34 +53,34 @@ function Tooltip({ state }: { state: TooltipState }) {
   const log = cell.log
   const sign = log && log.netDeficit > 0 ? "+" : ""
   const deficitColor =
-    log && log.netDeficit > 0 ? "text-green-600 dark:text-green-400" :
-    log && log.netDeficit < 0 ? "text-red-500" :
-    "text-foreground"
+    log && log.netDeficit > 0 ? "text-ember-forest" :
+    log && log.netDeficit < 0 ? "text-ember-amber" :
+    "text-ember-ink"
 
   return (
     <div
       ref={ref}
-      className="fixed z-50 pointer-events-none bg-popover border border-border rounded-xl px-3.5 py-2.5 shadow-lg text-xs min-w-[160px]"
+      className="fixed z-50 pointer-events-none bg-ember-card border border-ember-card-border rounded-2xl px-4 py-3 text-xs min-w-[160px]"
       style={{ left: pos.left, top: pos.top }}
     >
-      <p className="font-semibold text-foreground mb-1.5">
+      <p className="text-ember-ink mb-2">
         {cell.date.toLocaleDateString("en-CA", { weekday: "short", month: "short", day: "numeric", year: "numeric" })}
       </p>
       {cell.isFuture ? (
-        <p className="text-muted-foreground">Future</p>
+        <p className="text-ember-muted">Future</p>
       ) : log ? (
-        <div className="space-y-0.5">
+        <div className="space-y-1">
           <div className="flex justify-between gap-6">
-            <span className="text-muted-foreground">Eaten</span>
-            <span className="font-medium text-foreground">{log.caloriesEaten.toLocaleString()} kcal</span>
+            <span className="text-ember-muted">Eaten</span>
+            <span className="text-ember-ink">{log.caloriesEaten.toLocaleString()} kcal</span>
           </div>
-          <div className="flex justify-between gap-6 pt-0.5 border-t border-border mt-1">
-            <span className="text-muted-foreground">Net</span>
-            <span className={`font-semibold ${deficitColor}`}>{sign}{log.netDeficit.toLocaleString()} kcal</span>
+          <div className="flex justify-between gap-6 pt-1 border-t border-ember-card-border">
+            <span className="text-ember-muted">Net</span>
+            <span className={deficitColor}>{sign}{log.netDeficit.toLocaleString()} kcal</span>
           </div>
         </div>
       ) : (
-        <p className="text-muted-foreground">No entry logged</p>
+        <p className="text-ember-muted">No entry logged</p>
       )}
     </div>
   )
@@ -110,24 +110,24 @@ export function HeatmapGrid({ grid, monthLabels }: Props) {
       <div className="w-full" style={{ display: "grid", gridTemplateColumns, gap: "3px" }}>
 
         {/* Month label row */}
-        {!isMobile && <div />}{/* spacer above day labels */}
+        {!isMobile && <div />}
         {grid.map((_, colIdx) => (
           <div key={colIdx} className="relative h-[14px] min-w-0">
             {monthLabels.has(colIdx) && (
-              <span className="absolute left-0 text-muted-foreground whitespace-nowrap text-[9px] leading-none">
+              <span className="absolute left-0 text-ember-muted whitespace-nowrap text-[9px] leading-none">
                 {monthLabels.get(colIdx)}
               </span>
             )}
           </div>
         ))}
 
-        {/* Day labels column — only rendered on sm+, excluded from grid on mobile */}
+        {/* Day labels */}
         {!isMobile && (
           <div className="flex flex-col gap-[3px]">
             {DAY_LABELS.map((d, i) => (
               <div key={i} className="h-[13px] flex items-center justify-center">
                 {i % 2 === 1 && (
-                  <span className="text-muted-foreground text-[8px]">{d}</span>
+                  <span className="text-ember-muted text-[8px]">{d}</span>
                 )}
               </div>
             ))}

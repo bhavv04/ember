@@ -1,6 +1,5 @@
 "use client"
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import type { DailyLog } from "@/types"
 import { HeatmapGrid } from "@/components/log/heatmap-grid"
 import { HeatmapLegend } from "@/components/log/heatmap-legend"
@@ -19,17 +18,16 @@ export function CalendarHeatmap({ logs }: Props) {
   today.setHours(0, 0, 0, 0)
 
   const logMap = new Map<string, DailyLog>()
-    logs.forEach((log) => {
-    logMap.set(log.date, log) // log.date is already "2026-06-12" from the normalised GET
-    })
+  logs.forEach((log) => {
+    logMap.set(log.date, log)
+  })
 
-    const cells: Cell[] = Array.from({ length: DAYS }, (_, i) => {
+  const cells: Cell[] = Array.from({ length: DAYS }, (_, i) => {
     const date = new Date(today)
     date.setDate(today.getDate() - (DAYS - 1 - i))
-    // Build key in local time, not UTC
     const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`
     return { date, key, log: logMap.get(key), isFuture: date > today }
-    })
+  })
 
   const stats = computeStats(cells)
 
@@ -57,30 +55,37 @@ export function CalendarHeatmap({ logs }: Props) {
   })
 
   return (
-    <Card>
-      <CardHeader className="">
-        <div className="flex items-baseline justify-between">
-          <CardTitle className="text-base">Consistency</CardTitle>
-          <span className="text-[11px] text-muted-foreground">{rangeStart} – {rangeEnd}</span>
-        </div>
-      </CardHeader>
+    <div className="space-y-6">
 
-      <CardContent className="space-y-4">
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-          <StatCard label="Logged days" value={String(stats.loggedDays)} />
-          <StatCard label="Log rate" value={`${stats.logRate}%`}
-            sentiment={stats.logRate >= 80 ? "positive" : stats.logRate < 50 ? "negative" : "neutral"} />
-          <StatCard label="Avg deficit"
-            value={`${stats.avgDeficit > 0 ? "+" : ""}${stats.avgDeficit.toLocaleString()} kcal`}
-            sentiment={stats.avgDeficit > 0 ? "positive" : stats.avgDeficit < 0 ? "negative" : "neutral"} />
-          <StatCard label="Deficit days" value={String(stats.deficitDays)}
-            sentiment={stats.deficitDays > stats.loggedDays * 0.6 ? "positive" : "neutral"} />
-        </div>
+      {/* Header */}
+      <div className="flex items-baseline justify-between">
+        <p className="uppercase tracking-[0.18em] text-xs text-ember-muted">Consistency</p>
+        <span className="text-xs text-ember-muted">{rangeStart} – {rangeEnd}</span>
+      </div>
 
-        <StreakBadges currentStreak={stats.currentStreak} bestStreak={stats.bestStreak} />
-        <HeatmapGrid grid={grid} monthLabels={monthLabels} />
-        <HeatmapLegend />
-      </CardContent>
-    </Card>
+      {/* Stat cards */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+        <StatCard label="Logged days" value={String(stats.loggedDays)} />
+        <StatCard
+          label="Log rate"
+          value={`${stats.logRate}%`}
+          sentiment={stats.logRate >= 80 ? "positive" : stats.logRate < 50 ? "negative" : "neutral"}
+        />
+        <StatCard
+          label="Avg deficit"
+          value={`${stats.avgDeficit > 0 ? "+" : ""}${stats.avgDeficit.toLocaleString()} kcal`}
+          sentiment={stats.avgDeficit > 0 ? "positive" : stats.avgDeficit < 0 ? "negative" : "neutral"}
+        />
+        <StatCard
+          label="Deficit days"
+          value={String(stats.deficitDays)}
+          sentiment={stats.deficitDays > stats.loggedDays * 0.6 ? "positive" : "neutral"}
+        />
+      </div>
+
+      <StreakBadges currentStreak={stats.currentStreak} bestStreak={stats.bestStreak} />
+      <HeatmapGrid grid={grid} monthLabels={monthLabels} />
+      <HeatmapLegend />
+    </div>
   )
 }

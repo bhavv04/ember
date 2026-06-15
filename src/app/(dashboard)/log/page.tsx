@@ -43,35 +43,49 @@ export default function LogPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="max-w-2xl mx-auto px-4 sm:px-6 py-10 space-y-4">
-        <div className="mb-6">
-          <h1 className="text-xl font-semibold tracking-tight">Log today</h1>
-          <p className="text-sm text-muted-foreground mt-0.5">
+    <div className="min-h-screen">
+      <div className="max-w-2xl mx-auto px-4 sm:px-6 pt-12 pb-10 space-y-4">
+
+        {/* Header */}
+        <div className="pb-2">
+          <p className="uppercase tracking-[0.18em] text-xs text-ember-muted mb-1">Daily entry</p>
+          <h1 className="text-2xl text-ember-ink tracking-tight">Log today</h1>
+          <p className="text-sm text-ember-muted mt-1">
             {new Date().toLocaleDateString("en-CA", {
               weekday: "long", year: "numeric", month: "long", day: "numeric",
             })}
           </p>
         </div>
 
-        <LogForm
+        {/* Log form */}
+        <div className="bg-ember-card border border-ember-card-border rounded-3xl p-8">
+          <LogForm
             baselineTdee={baselineTdee}
             loggedDates={logs.map((l) => l.date)}
             onSubmit={handleSubmit}
-        />
+          />
+        </div>
 
-        {!fetching && logs.length > 0 && <CalendarHeatmap logs={logs} />}
+        {/* Calendar heatmap */}
+        {!fetching && logs.length > 0 && (
+          <div className="bg-ember-card border border-ember-card-border rounded-3xl p-8">
+            <p className="uppercase tracking-[0.18em] text-xs text-ember-muted mb-6">History</p>
+            <CalendarHeatmap logs={logs} />
+          </div>
+        )}
 
+        {/* Loading skeleton */}
         {fetching && (
-          <div className="rounded-xl border border-border bg-card p-5 space-y-3 animate-pulse">
-            <div className="h-3 w-24 rounded bg-muted" />
+          <div className="bg-ember-card border border-ember-card-border rounded-3xl p-8 space-y-4 animate-pulse">
+            <div className="h-2.5 w-20 rounded-full bg-ember-forest-pale" />
             <div className="flex gap-1 flex-wrap">
               {Array.from({ length: 112 }).map((_, i) => (
-                <div key={i} className="w-2.5 h-2.5 rounded-sm bg-muted" />
+                <div key={i} className="w-2.5 h-2.5 rounded-sm bg-ember-forest-pale" />
               ))}
             </div>
           </div>
         )}
+
       </div>
     </div>
   )
