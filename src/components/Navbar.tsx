@@ -3,7 +3,6 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { UserButton } from "@clerk/nextjs"
-import { ThemeToggle } from "@/components/ui/theme-toggle"
 import {
   LayoutDashboard,
   PencilLine,
@@ -29,7 +28,7 @@ export default function DashboardNavbar() {
 
           {/* Logo */}
           <Link href="/dashboard" className="flex items-center gap-2">
-            <img src="/ember.png" alt="Ember Logo" className="w-8 h-8" />
+            <img src="/ember_logo.png" alt="Ember Logo" className="w-8 h-8" />
             <span className="font-bold text-foreground tracking-tight text-sm">ember</span>
           </Link>
 
@@ -52,7 +51,6 @@ export default function DashboardNavbar() {
 
           {/* Right */}
           <div className="flex items-center gap-3">
-            <ThemeToggle />
             <UserButton afterSignOutUrl="/" />
           </div>
 

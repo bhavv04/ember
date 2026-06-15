@@ -29,7 +29,7 @@ export default function Navbar() {
       >
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 pl-2">
-          <Image src="/ember.png" alt="Ember Logo" width={28} height={28} className="rounded-full" />
+          <Image src="/ember_logo.png" alt="Ember Logo" width={28} height={28} className="rounded-full" />
           <span className="text-sm font-bold tracking-tight text-gray-800">
             ember
             <span className="text-orange-400 font-bold">.</span>
