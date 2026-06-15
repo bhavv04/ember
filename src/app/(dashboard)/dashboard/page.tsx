@@ -114,11 +114,13 @@ export default function DashboardPage() {
           {/* Progress — takes full width on mobile, 2 cols on desktop */}
           <div className="lg:col-span-2">
             <ProgressCard
-              weightToLose={weightToLose}
-              totalDeficit={totalDeficit}
-              burnedSoFar={burnedSoFar}
-              remaining={remaining}
-              progressPercent={progressPercent}
+            weightToLose={weightToLose}
+            totalDeficit={totalDeficit}
+            burnedSoFar={burnedSoFar}
+            remaining={remaining}
+            progressPercent={progressPercent}
+            avgDailyDeficit={avgDailyDeficit}
+            loggedDays={logs.length}
             />
           </div>
 
