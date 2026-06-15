@@ -36,16 +36,6 @@ export default function Navbar() {
           </span>
         </Link>
 
-        {/* Nav links */}
-        <div className="hidden md:flex items-center gap-6">
-          <Link href="#how-it-works" className="text-sm text-gray-500 hover:text-gray-800 transition-colors">
-            how it works
-          </Link>
-          <Link href="#the-math" className="text-sm text-gray-500 hover:text-gray-800 transition-colors">
-            the math
-          </Link>
-        </div>
-
         {/* Actions */}
         <div className="flex items-center gap-1 pr-1">
           {!isLoaded ? (

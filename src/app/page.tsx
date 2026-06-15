@@ -3,7 +3,7 @@ import { redirect } from "next/navigation"
 import Navbar from './homepage/components/Navbar'
 import Hero from './homepage/sections/Hero'
 import HowItWorks from './homepage/sections/HowItWorks'
-import TheMath from './homepage/sections/TheMath'
+import Footer from './homepage/components/Footer'
 
 
 export default async function HomePage() {
@@ -16,7 +16,7 @@ export default async function HomePage() {
       <Navbar />
       <Hero />
       <HowItWorks />
-      <TheMath />
+      <Footer />
     </main>
   )
 }
