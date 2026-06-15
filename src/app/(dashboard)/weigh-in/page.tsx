@@ -28,69 +28,88 @@ export default function WeighInPage() {
     setHistory((prev) => [entry, ...prev])
   }
 
+  const current = history[0]?.weightKg
+  const lost = goal && current ? (goal.startWeightKg - current).toFixed(1) : null
+  const remaining = goal && current ? (current - goal.targetWeightKg).toFixed(1) : null
+
   return (
-    <div className="min-h-screen bg-background">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 space-y-6">
+    <div className="min-h-screen">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 pt-12 pb-10 space-y-4">
 
         {/* Header */}
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Weigh in</h1>
-          <p className="text-sm text-muted-foreground mt-0.5">
-            Weekly weigh-ins recalibrate your TDEE automatically
+        <div className="flex items-start justify-between pb-2">
+          <div>
+            <p className="uppercase tracking-[0.18em] text-xs text-ember-muted mb-1">Body</p>
+            <h1 className="text-2xl text-ember-ink tracking-tight">Weigh in</h1>
+            <p className="text-sm text-ember-muted mt-1">
+              Weekly weigh-ins recalibrate your TDEE automatically
+            </p>
+          </div>
+          <p className="text-xs text-ember-muted mt-1">
+            {new Date().toLocaleDateString("en-CA", { weekday: "short", month: "short", day: "numeric" })}
           </p>
         </div>
 
-        {/* Top row — form + quick stats */}
+        {/* Top row */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="md:col-span-2">
+
+          {/* Form */}
+          <div className="md:col-span-2 bg-ember-card border border-ember-card-border rounded-3xl p-8">
+            <p className="uppercase tracking-[0.18em] text-xs text-ember-muted mb-6">New entry</p>
             <WeightForm
               baselineTdee={goal?.baselineTdee}
               onSaved={handleSaved}
             />
           </div>
 
-          {/* Quick stats */}
-          {!fetching && goal && history.length > 0 && (
-            <div className="flex flex-col gap-3">
-              {[
-                {
-                  label: "Start weight",
-                  value: `${goal.startWeightKg} kg`,
-                },
-                {
-                  label: "Current",
-                  value: `${history[0]?.weightKg ?? "—"} kg`,
-                },
-                {
-                  label: "Target",
-                  value: `${goal.targetWeightKg} kg`,
-                },
-              ].map((s) => (
-                <div
-                  key={s.label}
-                  className="rounded-xl border border-border bg-card px-4 py-3 flex-1"
-                >
-                  <p className="text-xs text-muted-foreground uppercase tracking-widest mb-1">
-                    {s.label}
-                  </p>
-                  <p className="text-xl font-bold tabular-nums">{s.value}</p>
-                </div>
-              ))}
-            </div>
-          )}
+          {/* Stats */}
+          <div className="flex flex-col gap-3">
+            {fetching ? (
+              <>
+                {[...Array(4)].map((_, i) => (
+                  <div key={i} className="bg-ember-card border border-ember-card-border rounded-2xl px-5 py-4 flex-1 animate-pulse">
+                    <div className="h-2 w-16 bg-ember-forest-pale rounded-full mb-3" />
+                    <div className="h-6 w-20 bg-ember-forest-pale rounded-full" />
+                  </div>
+                ))}
+              </>
+            ) : goal ? (
+              <>
+                {[
+                  { label: "Start",   value: `${goal.startWeightKg} kg`,          color: "text-ember-ink"   },
+                  { label: "Current", value: current ? `${current} kg` : "—",      color: "text-ember-amber" },
+                  { label: "Lost",    value: lost ? `−${lost} kg` : "—",           color: "text-ember-forest"},
+                  { label: "To go",   value: remaining ? `${remaining} kg` : "—",  color: "text-ember-ink"   },
+                ].map((s) => (
+                  <div key={s.label} className="bg-ember-card border border-ember-card-border rounded-2xl px-5 py-4 flex-1">
+                    <p className="text-[11px] uppercase tracking-[0.15em] text-ember-muted mb-1">{s.label}</p>
+                    <p className={`text-xl tabular-nums ${s.color}`}>{s.value}</p>
+                  </div>
+                ))}
+              </>
+            ) : null}
+          </div>
         </div>
 
         {/* Chart */}
         {!fetching && goal && history.length >= 2 && (
-          <WeightChart
-            history={history}
-            startWeightKg={goal.startWeightKg}
-            targetWeightKg={goal.targetWeightKg}
-          />
+          <div className="bg-ember-card border border-ember-card-border rounded-3xl p-8">
+            <p className="uppercase tracking-[0.18em] text-xs text-ember-muted mb-6">Trend</p>
+            <WeightChart
+              history={history}
+              startWeightKg={goal.startWeightKg}
+              targetWeightKg={goal.targetWeightKg}
+            />
+          </div>
         )}
 
         {/* History */}
-        {!fetching && <WeightHistory history={history} />}
+        {!fetching && (
+          <div className="bg-ember-card border border-ember-card-border rounded-3xl p-8">
+            <p className="uppercase tracking-[0.18em] text-xs text-ember-muted mb-6">History</p>
+            <WeightHistory history={history} />
+          </div>
+        )}
 
       </div>
     </div>
