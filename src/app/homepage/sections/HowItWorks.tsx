@@ -2,7 +2,18 @@
 
 import Link from "next/link"
 import { useUser } from "@clerk/nextjs"
+import { Footprints, Waves, Bike, UtensilsCrossed, MoveUpRight, PersonStanding } from "lucide-react"
 
+const CALORIES_PER_KG = 7700
+
+const ACTIVITIES = [
+  { Icon: Footprints,      activity: "Walking",      value: "257,000", unit: "steps"           },
+  { Icon: Bike,            activity: "Cycling",      value: "385",     unit: "km"              },
+  { Icon: Waves,           activity: "Swimming",     value: "19",      unit: "hours"           },
+  { Icon: PersonStanding,  activity: "Yoga",         value: "51",      unit: "hours"           },
+  { Icon: MoveUpRight,     activity: "Hiking",       value: "77",      unit: "hours"           },
+  { Icon: UtensilsCrossed, activity: "Eating less", value: "8 days", unit: "-1000 kcal/day" },
+]
 export default function HowItWorks() {
   const { isSignedIn } = useUser()
 
@@ -62,6 +73,36 @@ export default function HowItWorks() {
               Every calorie deficit chips away at the mountain.
             </p>
           </div>
+
+          {/* The Math Card */}
+        <div className="lg:col-span-3 bg-ember-card rounded-3xl p-8">
+        <p className="uppercase tracking-[0.15em] text-xs text-ember-muted mb-4">
+            The Math
+        </p>
+        <h3 className="text-2xl text-ember-ink mb-1">
+            What does losing 1 kg actually take?
+        </h3>
+        <p className="text-ember-muted leading-relaxed mb-8 max-w-lg text-sm">
+            {CALORIES_PER_KG.toLocaleString()} calories, burned gradually. Here's what that looks like in real activity.
+        </p>
+
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 rounded-2xl gap-3">
+        {ACTIVITIES.map(({ Icon, activity, value, unit }) => (
+            <div key={activity} className="p-4 flex flex-col gap-3 bg-ember-forest-pale rounded-2xl">
+                <Icon size={18} className="text-ember-amber" strokeWidth={2} />
+                <p className="text-ember-muted text-xs">{activity}</p>
+                <div className="mt-auto">
+                <p className="text-ember-ink text-xl font-medium">{value}</p>
+                <p className="text-ember-muted text-xs mt-0.5">{unit}</p>
+                </div>
+            </div>
+            ))}
+        </div>
+
+        <p className="text-xs text-ember-muted mt-5">
+            Estimates for a 70 kg adult. Ember refines these using your actual data.
+        </p>
+        </div>
 
           {/* Step 1 */}
           <div className="bg-ember-card border border-ember-card-border rounded-3xl p-8">

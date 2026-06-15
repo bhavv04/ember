@@ -52,6 +52,7 @@
   --color-ember-secondary-page: var(--ember-secondary-page);
   --color-ember-card:         var(--ember-card);
   --color-ember-card-border:  var(--ember-card-border);
+  --color-ember-grid:         var(--ember-grid);
   --color-ember-ink:          var(--ember-ink);
   --color-ember-muted:        var(--ember-muted);
 
@@ -112,6 +113,7 @@
   --ember-card-border:  #e5ddd2;
   --ember-ink:          #1d1b18;
   --ember-muted:        #8a7f72;
+  --ember-grid:         #e5ddd2;   /* grid lines in math card, also used as dark border between light cards */
 
   /* Forest greens */
   --ember-forest:       #2f4a36;   /* dark panel bg, CTA bg           */

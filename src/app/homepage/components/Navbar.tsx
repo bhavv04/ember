@@ -37,7 +37,7 @@ export default function Navbar() {
         </Link>
 
         {/* Actions */}
-        <div className="flex items-center gap-1 pr-1">
+        <div className="flex items-center gap-1.5 pr-1">
           {!isLoaded ? (
             <div className="w-7 h-7 rounded-full bg-gray-200 animate-pulse" />
           ) : isSignedIn ? (
@@ -46,7 +46,7 @@ export default function Navbar() {
             <>
               <Link
                 href="/sign-in"
-                className="text-xs text-gray-500 hover:text-gray-800 transition-colors px-3 py-1.5"
+                className="text-xs bg-gray-100 hover:bg-gray-200 rounded-full transition-colors px-3 py-2"
               >
                 sign in
               </Link>
