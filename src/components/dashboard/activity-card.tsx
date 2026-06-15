@@ -1,4 +1,3 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ACTIVITIES } from "@/lib/constants"
 
 interface Props {
@@ -7,25 +6,26 @@ interface Props {
 
 export function ActivityCard({ remaining }: Props) {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>To burn the rest you could</CardTitle>
-        <p className="text-sm text-muted-foreground">Based on {remaining.toLocaleString()} kcal remaining</p>
-      </CardHeader>
-      <CardContent className="space-y-2">
-        {ACTIVITIES.map((activity) => (
-          <div key={activity.label} className="flex items-center justify-between p-3 rounded-lg bg-muted">
-            <div>
-              <p className="font-medium text-sm">{activity.label}</p>
-              <p className="text-xs text-muted-foreground">{activity.sub(remaining)}</p>
+    <div className="bg-ember-card border border-ember-card-border rounded-3xl p-8">
+
+      <p className="uppercase tracking-[0.18em] text-xs text-ember-muted mb-2">To burn the rest</p>
+      <p className="text-ember-ink text-sm mb-6 max-w-sm">
+        Based on <span className="text-ember-amber">{remaining.toLocaleString()} kcal</span> remaining
+      </p>
+
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-px bg-ember-card-border rounded-2xl overflow-hidden">
+            {ACTIVITIES.map(({ label, Icon, convert, unit }) => (
+            <div key={label} className="bg-ember-card p-5 flex flex-col gap-3">
+                <Icon size={18} className="text-ember-amber" strokeWidth={1.5} />
+                <p className="text-ember-muted text-xs">{label}</p>
+                <div className="mt-auto">
+                <p className="text-ember-ink text-xl">{convert(remaining)}</p>
+                <p className="text-ember-muted text-xs mt-0.5">{unit}</p>
+                </div>
             </div>
-            <div className="text-right">
-              <p className="text-xl font-bold">{activity.convert(remaining)}</p>
-              <p className="text-xs text-muted-foreground">{activity.unit}</p>
-            </div>
-          </div>
-        ))}
-      </CardContent>
-    </Card>
+            ))}
+      </div>
+
+    </div>
   )
 }

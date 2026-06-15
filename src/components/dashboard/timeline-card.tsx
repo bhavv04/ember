@@ -1,5 +1,3 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-
 interface Props {
   projectedDate: string
   avgDailyDeficit: number
@@ -10,80 +8,61 @@ export function TimelineCard({ projectedDate, avgDailyDeficit, daysRemaining }: 
   const weeksRemaining = Math.ceil(daysRemaining / 7)
   const monthsRemaining = (daysRemaining / 30.4).toFixed(1)
 
-  // Pace assessment
   const pace =
-    avgDailyDeficit >= 700 ? { label: "Aggressive", color: "text-red-500", bg: "bg-red-500/10" } :
-    avgDailyDeficit >= 400 ? { label: "On track", color: "text-green-500", bg: "bg-green-500/10" } :
-    avgDailyDeficit >= 200 ? { label: "Moderate", color: "text-orange-500", bg: "bg-orange-500/10" } :
-    { label: "Slow", color: "text-muted-foreground", bg: "bg-muted" }
-
-  // What if scenarios
-  const scenarios = [
-    { label: "At 300 kcal/day", days: null as number | null },
-    { label: "At 500 kcal/day", days: null as number | null },
-    { label: "At 700 kcal/day", days: null as number | null },
-  ]
+    avgDailyDeficit >= 700 ? { label: "Aggressive", color: "text-ember-amber", bg: "bg-ember-amber/10" } :
+    avgDailyDeficit >= 400 ? { label: "On track",   color: "text-ember-forest", bg: "bg-ember-forest-pale" } :
+    avgDailyDeficit >= 200 ? { label: "Moderate",   color: "text-ember-amber", bg: "bg-ember-amber/10" } :
+    { label: "Slow", color: "text-ember-muted", bg: "bg-ember-forest-pale" }
 
   return (
-    <Card className="flex flex-col h-full">
-      <CardHeader>
-        <CardTitle>Projected goal date</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4 flex flex-col flex-1">
+    <div className="bg-ember-forest rounded-3xl p-8 flex flex-col h-full">
 
-        {/* Main date */}
-        <div>
-          <p className="text-2xl font-bold tracking-tight leading-none">{projectedDate}</p>
-          <p className="text-xs text-muted-foreground mt-1.5">
-            at your current pace
-          </p>
-        </div>
+      <p className="uppercase tracking-[0.18em] text-xs text-ember-forest-text mb-6">Projected date</p>
 
-        {/* Pace badge */}
-        <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg w-fit ${pace.bg}`}>
-          <div className={`w-1.5 h-1.5 rounded-full ${pace.color.replace("text-", "bg-")}`} />
-          <span className={`text-xs font-semibold ${pace.color}`}>{pace.label} pace</span>
-          <span className="text-xs text-muted-foreground">·</span>
-          <span className={`text-xs font-semibold ${pace.color}`}>{avgDailyDeficit.toFixed(0)} kcal/day</span>
-        </div>
+      {/* Main date */}
+      <div className="mb-6">
+        <p className="text-2xl text-[#f7f3ea] tracking-tight leading-none">{projectedDate}</p>
+        <p className="text-xs text-ember-forest-muted mt-2">at your current pace</p>
+      </div>
 
-        {/* Time breakdown */}
-        <div className="rounded-lg bg-muted p-4 text-sm space-y-1">
-          <p className="font-medium text-xs uppercase tracking-wide text-muted-foreground mb-2">
-            time remaining
-          </p>
-          <div className="flex justify-between">
-            <span className="text-muted-foreground">Days</span>
-            <span className="font-bold">{daysRemaining.toLocaleString()}</span>
+      {/* Pace badge */}
+      <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-xl w-fit mb-6 bg-white/10`}>
+        <div className="w-1.5 h-1.5 rounded-full bg-ember-amber" />
+        <span className="text-xs text-[#f7f3ea]">{pace.label}</span>
+        <span className="text-xs text-ember-forest-muted">·</span>
+        <span className="text-xs text-ember-forest-muted">{Math.round(avgDailyDeficit)} kcal/day</span>
+      </div>
+
+      {/* Time breakdown */}
+      <div className="bg-white/5 rounded-2xl p-5 space-y-2 mb-6">
+        <p className="uppercase tracking-[0.15em] text-xs text-ember-forest-muted mb-3">Time remaining</p>
+        {[
+          { label: "Days",   value: daysRemaining.toLocaleString() },
+          { label: "Weeks",  value: weeksRemaining },
+          { label: "Months", value: monthsRemaining },
+        ].map(({ label, value }) => (
+          <div key={label} className="flex justify-between text-sm">
+            <span className="text-ember-forest-muted">{label}</span>
+            <span className="text-[#f7f3ea]">{value}</span>
           </div>
-          <div className="flex justify-between">
-            <span className="text-muted-foreground">Weeks</span>
-            <span className="font-bold">{weeksRemaining}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-muted-foreground">Months</span>
-            <span className="font-bold">{monthsRemaining}</span>
-          </div>
-        </div>
+        ))}
+      </div>
 
-        {/* What if scenarios */}
-        <div className="space-y-1 mt-auto">
-          <p className="font-medium text-xs uppercase tracking-wide text-muted-foreground mb-2">
-            what if
-          </p>
-          {[
-            { label: "300 kcal/day deficit", days: Math.ceil((daysRemaining * avgDailyDeficit) / 300) },
-            { label: "500 kcal/day deficit", days: Math.ceil((daysRemaining * avgDailyDeficit) / 500) },
-            { label: "700 kcal/day deficit", days: Math.ceil((daysRemaining * avgDailyDeficit) / 700) },
-          ].map((s) => (
-            <div key={s.label} className="flex justify-between text-sm py-1 border-b border-border last:border-0">
-              <span className="text-muted-foreground">{s.label}</span>
-              <span className="font-medium">{s.days} days</span>
-            </div>
-          ))}
-        </div>
+      {/* What if */}
+      <div className="mt-auto space-y-2">
+        <p className="uppercase tracking-[0.15em] text-xs text-ember-forest-muted mb-3">What if</p>
+        {[
+          { label: "300 kcal/day", days: Math.ceil((daysRemaining * avgDailyDeficit) / 300) },
+          { label: "500 kcal/day", days: Math.ceil((daysRemaining * avgDailyDeficit) / 500) },
+          { label: "700 kcal/day", days: Math.ceil((daysRemaining * avgDailyDeficit) / 700) },
+        ].map((s) => (
+          <div key={s.label} className="flex justify-between text-sm py-1.5 border-b border-white/10 last:border-0">
+            <span className="text-ember-forest-muted">{s.label}</span>
+            <span className="text-[#f7f3ea]">{s.days} days</span>
+          </div>
+        ))}
+      </div>
 
-      </CardContent>
-    </Card>
+    </div>
   )
 }
