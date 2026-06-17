@@ -1,8 +1,18 @@
-# Ember 
+# Ember
 
-A calorie deficit visualizer. Set a weight loss goal, log your days, and watch the number burn down.
+A calorie deficit visualizer. Set a weight loss goal, log your days, and watch the numbers burn down.
 
-**[ember.app](https://ember.app)** · [Contributing](CONTRIBUTING.md) · [Security](SECURITY.md)
+
+Its dashboard look like: 
+
+![ember_dashboard](/public/ember1.png)
+
+![ember_activity](/public/ember2.png)
+
+
+The dashboard to log calories looks like: 
+![ember_log](/public/ember3.png)
+
 
 ## Stack
 
@@ -19,37 +29,27 @@ A calorie deficit visualizer. Set a weight loss goal, log your days, and watch t
 git clone https://github.com/bhavv04/ember
 cd ember
 npm install
-```
-
-Copy `.env.example` to `.env` and fill in your keys:
-
-```bash
-cp .env.example .env
-```
-
-Push the database schema:
-
-```bash
-npx prisma db push
-npx prisma generate
-```
-
-Run the dev server:
-
-```bash
 npm run dev
 ```
 
 ## Environment variables
 
-| Variable | Description |
-|---|---|
-| `DATABASE_URL` | Neon Postgres connection string |
-| `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` | Clerk publishable key |
-| `CLERK_SECRET_KEY` | Clerk secret key |
+Create a `.env` file in the root with the following:
 
-See `.env.example` for the full list.
+```env
+NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
+NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
+NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/dashboard
+NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/dashboard
 
-## Status
+DATABASE_URL=
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
+CLERK_SECRET_KEY=
+```
 
-🚧 In active development
+Then push the schema:
+
+```bash
+npx prisma db push
+npx prisma generate
+```
