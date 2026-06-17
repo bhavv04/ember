@@ -14,7 +14,7 @@ export default function Footer() {
         <div className="relative z-10 max-w-5xl w-full mx-auto">
           <h1 className="text-white text-[clamp(2.2rem,5vw,4rem)] font-medium leading-tight">
             Its easier than you think to climb your mountain.
-          </h1>
+          </h1> 
         </div>
       </div>
 

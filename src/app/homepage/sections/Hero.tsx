@@ -20,7 +20,7 @@ export default function Hero() {
 
         <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-black/5" />
 
-        <div className="absolute inset-0 flex flex-col justify-end px-12 pb-16">
+        <div className="absolute inset-0 flex flex-col justify-end px-4 sm:px-12 pb-16">
         <p className="text-sm font-serif tracking-wide text-white/90 italic mb-4">
             Weight loss, simplified
         </p>
