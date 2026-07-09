@@ -54,10 +54,12 @@ export default function DashboardPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-ember-page">
         <div className="space-y-2 text-center">
-          <div className="w-7 h-7 rounded-full border-2 border-orange-500 border-t-transparent animate-spin mx-auto" />
-          <p className="text-sm text-muted-foreground">Loading your ember...</p>
+          <div className="w-5 h-5 border border-ember-amber border-t-transparent animate-spin mx-auto" />
+          <p className="text-xs  uppercase tracking-wider text-ember-muted">
+            Reading instruments...
+          </p>
         </div>
       </div>
     )
@@ -65,11 +67,15 @@ export default function DashboardPage() {
 
   if (!goal) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center px-6 bg-ember-page">
         <div className="text-center space-y-3">
-          <p className="text-4xl">🔥</p>
-          <p className="font-semibold">No goal set yet</p>
-          <a href="/settings" className="text-sm text-orange-500 underline">Set one up</a>
+          <p className="text-2xl font-semibold text-ember-ink">No goal set yet</p>
+          <a
+            href="/settings"
+            className="text-sm  text-ember-amber border-b border-ember-amber/40 hover:border-ember-amber transition-colors pb-px"
+          >
+            Set one up →
+          </a>
         </div>
       </div>
     )
@@ -88,44 +94,53 @@ export default function DashboardPage() {
       })
     : null
 
+  const today = new Date()
+
   return (
-    <div className="min-h-screen">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 space-y-4">
+    <div
+      className="min-h-screen bg-ember-page"
+    >
+      <div className="max-w-7xl mx-auto px-6 sm:px-10 py-12 sm:py-16">
 
         {/* Header */}
-        <div className="flex items-start justify-between pb-2">
+        <div className="flex items-start justify-between pb-8 mb-8 border-b border-ember-card-border">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">Your ember</h1>
-            <p className="text-sm text-muted-foreground mt-0.5">
+            <h1 className="text-3xl font-semibold text-ember-ink">Your ember</h1>
+            <p className="text-sm text-ember-muted mt-1 ">
               {weightToLose} kg goal · {totalDeficit.toLocaleString()} kcal mountain
             </p>
           </div>
-          <p className="text-xs text-muted-foreground mt-1">
-            {new Date().toLocaleDateString("en-CA", { weekday: "short", month: "short", day: "numeric" })}
+          <p className="text-xs  text-ember-muted mt-1">
+            {today.toLocaleDateString("en-CA", { weekday: "short", month: "short", day: "numeric" })}
           </p>
         </div>
 
-        {/* Quick actions always visible at top */}
-        <QuickActions />
+        {/* Quick actions */}
+        <div className="pb-8 mb-8 border-b border-ember-card-border">
+          <QuickActions />
+        </div>
 
-        {/* Main bento grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-
-          {/* Progress — takes full width on mobile, 2 cols on desktop */}
-          <div className="lg:col-span-2">
+        {/* Progress + Timeline side by side on wider screens */}
+        <div className="grid sm:grid-cols-2 gap-x-12 pb-8 mb-8 border-b border-ember-card-border">
+          <div>
+            <h2 className="text-sm text-ember-muted mb-5">
+              Fig. 01 — Progress
+            </h2>
             <ProgressCard
-            weightToLose={weightToLose}
-            totalDeficit={totalDeficit}
-            burnedSoFar={burnedSoFar}
-            remaining={remaining}
-            progressPercent={progressPercent}
-            avgDailyDeficit={avgDailyDeficit}
-            loggedDays={logs.length}
+              weightToLose={weightToLose}
+              totalDeficit={totalDeficit}
+              burnedSoFar={burnedSoFar}
+              remaining={remaining}
+              progressPercent={progressPercent}
+              avgDailyDeficit={avgDailyDeficit}
+              loggedDays={logs.length}
             />
           </div>
 
-          {/* Timeline — 1 col */}
-          <div className="lg:col-span-1">
+          <div className="mt-8 sm:mt-0">
+            <h2 className="text-sm text-ember-muted mb-5">
+              Fig. 02 — Timeline
+            </h2>
             {projectedDate && daysRemaining ? (
               <TimelineCard
                 projectedDate={projectedDate}
@@ -133,17 +148,20 @@ export default function DashboardPage() {
                 daysRemaining={daysRemaining}
               />
             ) : (
-              <div className="rounded-2xl border border-border bg-card p-6 h-full flex flex-col justify-center items-center text-center gap-2">
-                <p className="text-3xl">📈</p>
-                <p className="text-sm font-medium">No projection yet</p>
-                <p className="text-xs text-muted-foreground">Log a few days to see your projected goal date</p>
-              </div>
+              <p className="text-sm text-ember-muted ">
+                Log a few days to see your projected goal date.
+              </p>
             )}
           </div>
         </div>
 
-        {/* Activity card — full width */}
-        <ActivityCard remaining={remaining} />
+        {/* Activity */}
+        <div>
+          <h2 className="text-sm text-ember-muted mb-5">
+            Fig. 03 — Activity equivalents
+          </h2>
+          <ActivityCard remaining={remaining} />
+        </div>
 
       </div>
     </div>

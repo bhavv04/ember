@@ -43,14 +43,16 @@ export default function LogPage() {
   }
 
   return (
-    <div className="min-h-screen">
-      <div className="max-w-2xl mx-auto px-4 sm:px-6 pt-12 pb-10 space-y-4">
+    <div className="min-h-screen bg-ember-page">
+      <div className="max-w-5xl mx-auto px-6 sm:px-10 py-8 sm:py-12">
 
         {/* Header */}
-        <div className="pb-2">
-          <p className="uppercase tracking-[0.18em] text-xs text-ember-muted mb-1">Daily entry</p>
-          <h1 className="text-2xl text-ember-ink tracking-tight">Log today</h1>
-          <p className="text-sm text-ember-muted mt-1">
+        <div className="pb-8 mb-8 border-b border-ember-card-border">
+          <p className="uppercase text-ember-muted mb-2">
+            Daily entry
+          </p>
+          <h1 className="text-3xl font-semibold text-ember-ink">Log today</h1>
+          <p className="text-sm text-ember-muted mt-1 ">
             {new Date().toLocaleDateString("en-CA", {
               weekday: "long", year: "numeric", month: "long", day: "numeric",
             })}
@@ -58,7 +60,10 @@ export default function LogPage() {
         </div>
 
         {/* Log form */}
-        <div className="bg-ember-card border border-ember-card-border rounded-3xl p-8">
+        <div className={logs.length > 0 || fetching ? "pb-8 mb-8 border-b border-ember-card-border" : ""}>
+          <h2 className="text-sm text-ember-muted mb-5">
+            Fig. 01 — Entry
+          </h2>
           <LogForm
             baselineTdee={baselineTdee}
             loggedDates={logs.map((l) => l.date)}
@@ -68,19 +73,21 @@ export default function LogPage() {
 
         {/* Calendar heatmap */}
         {!fetching && logs.length > 0 && (
-          <div className="bg-ember-card border border-ember-card-border rounded-3xl p-8">
-            <p className="uppercase tracking-[0.18em] text-xs text-ember-muted mb-6">History</p>
+          <div>
+            <h2 className="text-sm text-ember-muted mb-5">
+              Fig. 02 — History
+            </h2>
             <CalendarHeatmap logs={logs} />
           </div>
         )}
 
         {/* Loading skeleton */}
         {fetching && (
-          <div className="bg-ember-card border border-ember-card-border rounded-3xl p-8 space-y-4 animate-pulse">
-            <div className="h-2.5 w-20 rounded-full bg-ember-forest-pale" />
+          <div className="space-y-4 animate-pulse">
+            <div className="h-2.5 w-20 bg-ember-card-border" />
             <div className="flex gap-1 flex-wrap">
               {Array.from({ length: 112 }).map((_, i) => (
-                <div key={i} className="w-2.5 h-2.5 rounded-sm bg-ember-forest-pale" />
+                <div key={i} className="w-2.5 h-2.5 bg-ember-card-border" />
               ))}
             </div>
           </div>

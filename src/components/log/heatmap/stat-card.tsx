@@ -6,12 +6,12 @@ interface Props {
 
 export function StatCard({ label, value, sentiment }: Props) {
   const valueColor =
-    sentiment === "positive" ? "text-ember-forest" :
+    sentiment === "positive" ? "text-ember-ink" :
     sentiment === "negative" ? "text-ember-amber" :
     "text-ember-ink"
 
   return (
-    <div className="bg-ember-forest-pale rounded-2xl px-4 py-3 min-w-0">
+    <div className="px-4 py-3 min-w-0 font-mono">
       <p className="text-[11px] uppercase tracking-[0.15em] text-ember-muted mb-1 truncate">{label}</p>
       <p className={`text-lg tabular-nums truncate ${valueColor}`}>{value}</p>
     </div>

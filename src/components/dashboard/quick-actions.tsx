@@ -1,17 +1,17 @@
 export function QuickActions() {
   return (
-    <div className="grid grid-cols-2 gap-3">
+    <div className="flex gap-4 font-mono text-xs uppercase tracking-wide">
       <a
         href="/log"
-        className="flex items-center justify-center py-3 px-5 rounded-2xl bg-ember-amber/10 text-ember-amber text-sm hover:bg-ember-amber/20 transition-colors"
+        className="flex items-center gap-2 px-4 py-2.5 bg-ember-ink text-ember-page hover:bg-ember-ink/90 transition-colors"
       >
-        + Log today
+        <span className="text-ember-amber">+</span> Log today
       </a>
       <a
         href="/weigh-in"
-        className="flex items-center justify-center py-3 px-5 rounded-2xl bg-ember-forest-pale text-ember-forest text-sm hover:bg-ember-forest-pale/80 transition-colors"
+        className="flex items-center gap-2 px-4 py-2.5 border border-ember-card-border text-ember-ink hover:border-ember-ink transition-colors"
       >
-        + Weigh in
+        <span className="text-ember-muted">+</span> Weigh in
       </a>
     </div>
   )

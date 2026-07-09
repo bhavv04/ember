@@ -69,14 +69,12 @@ export function LogForm({ baselineTdee, loggedDates, onSubmit }: Props) {
     <div className="space-y-1">
 
       {/* Title row */}
-      <div className="flex items-center justify-between mb-6">
-        <p className="text-ember-ink text-sm">
+      <div className="flex items-center justify-between mb-6 font-mono text-xs uppercase tracking-wide">
+        <p className="text-ember-ink">
           {existingLog ? "Update log" : "Log entry"}
         </p>
         {existingLog && (
-          <span className="text-xs text-ember-forest bg-ember-forest-pale px-2.5 py-1 rounded-full">
-            Editing existing
-          </span>
+          <span className="text-ember-amber">[ Editing existing ]</span>
         )}
       </div>
 
@@ -86,14 +84,14 @@ export function LogForm({ baselineTdee, loggedDates, onSubmit }: Props) {
         <div className="space-y-3">
 
           {/* Month nav */}
-          <div className="flex items-center justify-between mb-1">
+          <div className="flex items-center justify-between mb-1 font-mono">
             <button
               onClick={() => setCalendarMonth(subMonths(calendarMonth, 1))}
-              className="p-1.5 rounded-lg hover:bg-ember-forest-pale transition-colors"
+              className="p-1.5 hover:bg-ember-card-border/40 transition-colors"
             >
               <ChevronLeft className="w-4 h-4 text-ember-muted" />
             </button>
-            <p className="text-sm text-ember-ink">
+            <p className="text-sm text-ember-ink uppercase tracking-wide">
               {format(calendarMonth, "MMMM yyyy")}
             </p>
             <button
@@ -102,23 +100,23 @@ export function LogForm({ baselineTdee, loggedDates, onSubmit }: Props) {
                 calendarMonth.getMonth() >= new Date().getMonth() &&
                 calendarMonth.getFullYear() >= new Date().getFullYear()
               }
-              className="p-1.5 rounded-lg hover:bg-ember-forest-pale transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+              className="p-1.5 hover:bg-ember-card-border/40 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
             >
               <ChevronRight className="w-4 h-4 text-ember-muted" />
             </button>
           </div>
 
           {/* Day headers */}
-          <div className="grid grid-cols-7">
+          <div className="grid grid-cols-7 border-b border-ember-card-border pb-1">
             {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map((d) => (
-              <div key={d} className="text-center text-[11px] text-ember-muted py-1">
+              <div key={d} className="text-center text-[11px] font-mono text-ember-muted py-1">
                 {d}
               </div>
             ))}
           </div>
 
           {/* Day grid */}
-          <div className="grid grid-cols-7 gap-y-1">
+          <div className="grid grid-cols-7 gap-y-1 font-mono">
             {paddedDays.map((day, i) => {
               if (!day) return <div key={`pad-${i}`} />
 
@@ -137,18 +135,16 @@ export function LogForm({ baselineTdee, loggedDates, onSubmit }: Props) {
                       setCalendarMonth(day)
                     }}
                     className={cn(
-                      "w-8 h-8 rounded-full text-xs transition-all flex items-center justify-center border",
+                      "w-8 h-8 text-xs transition-all flex items-center justify-center border",
                       isSelected
-                        ? "bg-ember-forest border-ember-forest text-white"
-                        : isLogged && isTodayDay
-                        ? "border-ember-forest text-ember-forest"
+                        ? "bg-ember-ink border-ember-ink text-ember-page"
                         : isLogged
-                        ? "border-ember-forest text-ember-forest"
+                        ? "border-ember-amber text-ember-amber"
                         : isTodayDay
-                        ? "border-ember-forest text-ember-white hover:border-ember-forest hover:text-ember-forest"
+                        ? "border-ember-ink text-ember-ink"
                         : isFutureDay
-                        ? "border-ember-card-border/30 text-ember-muted/30 cursor-not-allowed"
-                        : "border-ember-card-border text-ember-muted hover:border-ember-forest hover:text-ember-forest"
+                        ? "border-ember-card-border/40 text-ember-muted/30 cursor-not-allowed"
+                        : "border-ember-card-border text-ember-muted hover:border-ember-ink hover:text-ember-ink"
                     )}
                   >
                     {format(day, "d")}
@@ -159,24 +155,24 @@ export function LogForm({ baselineTdee, loggedDates, onSubmit }: Props) {
           </div>
 
           {/* Selected date footer */}
-          <div className="flex items-center justify-between pt-3 border-t border-ember-card-border">
-            <p className="text-xs text-ember-muted">
+          <div className="flex items-center justify-between pt-3 border-t border-ember-card-border font-mono text-xs">
+            <p className="text-ember-muted uppercase tracking-wide">
               {isSelectedToday ? "Today" : format(selectedDate, "EEE, MMM d, yyyy")}
             </p>
-            {fetching && <p className="text-xs text-ember-muted">Loading…</p>}
+            {fetching && <p className="text-ember-muted">Loading…</p>}
             {existingLog && !fetching && (
-              <p className="text-xs text-ember-amber">Entry exists</p>
+              <p className="text-ember-amber">Entry exists</p>
             )}
           </div>
         </div>
 
         {/* Right — inputs */}
         <div className="space-y-4 flex flex-col justify-between">
-          <div className="space-y-4">
+          <div className="space-y-5">
 
             {/* Calories eaten */}
             <div className="space-y-1.5">
-              <label className="text-[11px] uppercase tracking-[0.15em] text-ember-muted">
+              <label className="text-[11px] font-mono uppercase tracking-[0.15em] text-ember-muted">
                 Calories eaten
               </label>
               <div className="relative">
@@ -186,9 +182,9 @@ export function LogForm({ baselineTdee, loggedDates, onSubmit }: Props) {
                   value={caloriesEaten}
                   onChange={(e) => setCaloriesEaten(e.target.value)}
                   disabled={fetching}
-                  className="w-full bg-ember-forest-pale border border-ember-card-border rounded-xl px-4 py-2.5 pr-14 text-sm text-ember-ink placeholder:text-ember-muted focus:outline-none focus:border-ember-amber transition-colors"
+                  className="w-full bg-transparent border-0 border-b border-ember-card-border px-0 py-2 pr-12 text-sm font-mono text-ember-ink placeholder:text-ember-muted focus:outline-none focus:border-ember-amber transition-colors"
                 />
-                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-ember-muted pointer-events-none">
+                <span className="absolute right-0 top-1/2 -translate-y-1/2 text-xs font-mono text-ember-muted pointer-events-none">
                   kcal
                 </span>
               </div>
@@ -197,14 +193,14 @@ export function LogForm({ baselineTdee, loggedDates, onSubmit }: Props) {
             {/* TDEE */}
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
-                <label className="text-[11px] uppercase tracking-[0.15em] text-ember-muted">
+                <label className="text-[11px] font-mono uppercase tracking-[0.15em] text-ember-muted">
                   TDEE today
                 </label>
                 {baselineTdee && (
                   <button
                     type="button"
                     onClick={() => setTdeeForDay(String(baselineTdee))}
-                    className="text-[11px] text-ember-muted hover:text-ember-amber transition-colors underline underline-offset-2"
+                    className="text-[11px] font-mono text-ember-muted hover:text-ember-amber transition-colors underline underline-offset-2"
                   >
                     Reset to baseline
                   </button>
@@ -217,42 +213,32 @@ export function LogForm({ baselineTdee, loggedDates, onSubmit }: Props) {
                   value={tdeeForDay}
                   onChange={(e) => setTdeeForDay(e.target.value)}
                   disabled={fetching}
-                  className="w-full bg-ember-forest-pale border border-ember-card-border rounded-xl px-4 py-2.5 pr-14 text-sm text-ember-ink placeholder:text-ember-muted focus:outline-none focus:border-ember-amber transition-colors"
+                  className="w-full bg-transparent border-0 border-b border-ember-card-border px-0 py-2 pr-12 text-sm font-mono text-ember-ink placeholder:text-ember-muted focus:outline-none focus:border-ember-amber transition-colors"
                 />
-                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-ember-muted pointer-events-none">
+                <span className="absolute right-0 top-1/2 -translate-y-1/2 text-xs font-mono text-ember-muted pointer-events-none">
                   kcal
                 </span>
               </div>
-              <p className="text-xs text-ember-muted">Increase if you worked out today</p>
+              <p className="text-xs text-ember-muted font-mono">Increase if you worked out today</p>
             </div>
 
             {/* Net deficit */}
             {net !== null && (
-              <div className={cn(
-                "flex items-center justify-between rounded-2xl px-5 py-4",
-                net > 0 ? "bg-ember-forest-pale" : "bg-ember-amber/10"
-              )}>
+              <div className="flex items-center justify-between border-y border-ember-card-border py-4 font-mono">
                 <div>
                   <p className="text-[11px] uppercase tracking-[0.15em] text-ember-muted mb-1">
                     Net deficit
                   </p>
                   <p className={cn(
                     "text-2xl tabular-nums",
-                    net > 0 ? "text-ember-forest" : "text-ember-amber"
+                    net > 0 ? "text-ember-ink" : "text-ember-amber"
                   )}>
                     {net > 0 ? "+" : ""}{net.toLocaleString()}
                     <span className="text-sm text-ember-muted ml-1">kcal</span>
                   </p>
                 </div>
-                <span className={cn(
-                  "text-xs px-2.5 py-1 rounded-full",
-                  net > 0
-                    ? "bg-ember-forest text-[#f7f3ea]"
-                    : net === 0
-                    ? "bg-ember-card-border text-ember-muted"
-                    : "bg-ember-amber/20 text-ember-amber"
-                )}>
-                  {net > 0 ? "Deficit" : net === 0 ? "Break even" : "Surplus"}
+                <span className="text-xs text-ember-muted">
+                  [ {net > 0 ? "Deficit" : net === 0 ? "Break even" : "Surplus"} ]
                 </span>
               </div>
             )}
@@ -262,7 +248,7 @@ export function LogForm({ baselineTdee, loggedDates, onSubmit }: Props) {
           <button
             disabled={!canSubmit}
             onClick={handleSubmit}
-            className="w-full bg-ember-forest text-[#f7f3ea] rounded-xl py-2.5 text-sm transition-all hover:-translate-y-px disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+            className="w-full bg-ember-ink text-ember-page py-3 text-sm font-mono uppercase tracking-wide transition-opacity hover:opacity-90 disabled:opacity-30 disabled:cursor-not-allowed"
           >
             {loading ? (
               <span className="flex items-center justify-center gap-2">

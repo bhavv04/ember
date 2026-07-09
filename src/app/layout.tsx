@@ -7,7 +7,7 @@ import { ThemeProvider } from "../components/ui/theme-provider"
 const geist = Geist({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Ember — Visualize the math behind your weight loss goal",
+  title: "My Ember",
   description: "Visualize the math behind your weight loss goal",
   applicationName: "Ember",
   metadataBase: new URL("https://myember.vercel.app"), 

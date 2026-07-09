@@ -59,30 +59,32 @@ export function WeightChart({ history, startWeightKg, targetWeightKg }: Props) {
   ]
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 ">
 
-      {/* Stats row */}
-      <div className="grid grid-cols-3 gap-2">
+      {/* Stats row — flat, bordered, no tile backgrounds */}
+      <div className="grid grid-cols-3 divide-x divide-ember-card-border border-y border-ember-card-border">
         {[
           {
             label: "Lost so far",
             value: `${totalLost >= 0 ? "−" : "+"}${Math.abs(totalLost).toFixed(1)} kg`,
-            color: totalLost >= 0 ? "text-ember-forest" : "text-ember-amber",
+            accent: totalLost >= 0,
           },
           {
             label: "Still to go",
             value: `${toGo > 0 ? toGo.toFixed(1) : "0"} kg`,
-            color: "text-ember-ink",
+            accent: false,
           },
           {
             label: "Progress",
             value: `${Math.min(Math.max(pct, 0), 100)}%`,
-            color: pct >= 50 ? "text-ember-forest" : "text-ember-amber",
+            accent: pct < 50,
           },
         ].map((s) => (
-          <div key={s.label} className="bg-ember-forest-pale rounded-2xl px-4 py-3">
+          <div key={s.label} className="px-4 py-3 first:pl-0">
             <p className="text-[11px] uppercase tracking-[0.15em] text-ember-muted mb-1">{s.label}</p>
-            <p className={`text-lg tabular-nums ${s.color}`}>{s.value}</p>
+            <p className={`text-lg tabular-nums ${s.accent ? "text-ember-amber" : "text-ember-ink"}`}>
+              {s.value}
+            </p>
           </div>
         ))}
       </div>
@@ -101,7 +103,7 @@ export function WeightChart({ history, startWeightKg, targetWeightKg }: Props) {
               key={t.val}
               x1={PAD.left} y1={t.y}
               x2={W - PAD.right} y2={t.y}
-              stroke="#d4c9a8"
+              stroke="#e3e5e4"
               strokeWidth="0.5"
               strokeDasharray="3,3"
             />
@@ -109,14 +111,14 @@ export function WeightChart({ history, startWeightKg, targetWeightKg }: Props) {
 
           {/* Y axis labels */}
           {yTicks.map((t) => (
-            <text key={t.val} x={PAD.left - 4} y={t.y + 3} textAnchor="end" fontSize="8" fill="#a89f88">
+            <text key={t.val} x={PAD.left - 4} y={t.y + 3} textAnchor="end" fontSize="8" fill="#6b7280">
               {t.val}
             </text>
           ))}
 
           {/* X axis labels */}
           {xLabels.map((l, i) => (
-            <text key={i} x={l.x} y={H - 4} textAnchor={i === 0 ? "start" : "end"} fontSize="8" fill="#a89f88">
+            <text key={i} x={l.x} y={H - 4} textAnchor={i === 0 ? "start" : "end"} fontSize="8" fill="#6b7280">
               {l.label}
             </text>
           ))}
@@ -125,12 +127,12 @@ export function WeightChart({ history, startWeightKg, targetWeightKg }: Props) {
           <line
             x1={PAD.left} y1={targetY}
             x2={W - PAD.right} y2={targetY}
-            stroke="#2d5a3d"
+            stroke="#1b1d1e"
             strokeWidth="1"
             strokeDasharray="4,3"
-            opacity="0.6"
+            opacity="0.4"
           />
-          <text x={W - PAD.right + 2} y={targetY + 3} fontSize="7" fill="#2d5a3d" opacity="0.8">
+          <text x={W - PAD.right + 2} y={targetY + 3} fontSize="7" fill="#1b1d1e" opacity="0.6">
             goal
           </text>
 
@@ -138,37 +140,37 @@ export function WeightChart({ history, startWeightKg, targetWeightKg }: Props) {
           <line
             x1={PAD.left} y1={startY}
             x2={W - PAD.right} y2={startY}
-            stroke="#a89f88"
+            stroke="#6b7280"
             strokeWidth="0.5"
             strokeDasharray="2,4"
             opacity="0.4"
           />
 
           {/* Area fill */}
-          <path d={areaPath} fill="#c17f24" fillOpacity="0.06" />
+          <path d={areaPath} fill="#d97706" fillOpacity="0.06" />
 
           {/* Line */}
           <path
             d={linePath}
             fill="none"
-            stroke="#c17f24"
-            strokeWidth="2"
+            stroke="#d97706"
+            strokeWidth="1.5"
             strokeLinecap="round"
             strokeLinejoin="round"
           />
 
           {/* Data points */}
           {sorted.map((h, i) => (
-            <circle key={h.id} cx={xPos(i)} cy={yPos(h.weightKg)} r="2.5" fill="#c17f24" stroke="#faf6ee" strokeWidth="1" />
+            <circle key={h.id} cx={xPos(i)} cy={yPos(h.weightKg)} r="2" fill="#d97706" stroke="#fafaf9" strokeWidth="1" />
           ))}
 
           {/* Latest point highlight */}
           <circle
             cx={xPos(sorted.length - 1)}
             cy={yPos(sorted[sorted.length - 1].weightKg)}
-            r="4"
-            fill="#c17f24"
-            stroke="#faf6ee"
+            r="3.5"
+            fill="#d97706"
+            stroke="#fafaf9"
             strokeWidth="1.5"
           />
         </svg>

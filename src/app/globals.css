@@ -107,13 +107,13 @@
   /* ── Ember brand tokens ────────────────────────── */
 
   /* Page / surface */
-  --ember-page:         #f6f3ed;
-  --ember-secondary-page:    #f5f5f5;
-  --ember-card:         #fbfaf7;
-  --ember-card-border:  #e5ddd2;
-  --ember-ink:          #1d1b18;
-  --ember-muted:        #8a7f72;
-  --ember-grid:         #e5ddd2;   /* grid lines in math card, also used as dark border between light cards */
+  --ember-page:         #fafaf9;   /* cool near-white, not cream */
+  --ember-secondary-page: #f4f5f4;
+  --ember-card:         #ffffff;
+  --ember-card-border:  #2f4a36;   /* cool gray hairline */
+  --ember-ink:          #1b1d1e;   /* near-black, desaturated */
+  --ember-muted:        #6b7280;   /* cool gray */
+  --ember-grid:         #e3e5e4;
 
   /* Forest greens */
   --ember-forest:       #2f4a36;   /* dark panel bg, CTA bg           */

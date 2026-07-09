@@ -1,10 +1,10 @@
 "use client"
 
 import type { DailyLog } from "@/types"
-import { HeatmapGrid } from "@/components/log/heatmap-grid"
-import { HeatmapLegend } from "@/components/log/heatmap-legend"
-import { StatCard } from "@/components/log/stat-card"
-import { StreakBadges } from "@/components/log/streak-badges"
+import { HeatmapGrid } from "@/components/log/heatmap/heatmap-grid"
+import { HeatmapLegend } from "@/components/log/heatmap/heatmap-legend"
+import { StatCard } from "@/components/log/heatmap/stat-card"
+import { StreakBadges } from "@/components/log/heatmap/streak-badges"
 import { computeStats, type Cell } from "@/lib/heatmap-stats"
 
 interface Props {
@@ -55,16 +55,16 @@ export function CalendarHeatmap({ logs }: Props) {
   })
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 font-mono">
 
       {/* Header */}
-      <div className="flex items-baseline justify-between">
-        <p className="uppercase tracking-[0.18em] text-xs text-ember-muted">Consistency</p>
-        <span className="text-xs text-ember-muted">{rangeStart} – {rangeEnd}</span>
+      <div className="flex items-baseline justify-between text-xs">
+        <p className="uppercase tracking-[0.18em] text-ember-muted">Consistency</p>
+        <span className="text-ember-muted">{rangeStart} – {rangeEnd}</span>
       </div>
 
-      {/* Stat cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+      {/* Stat row — flat, bordered, no tile backgrounds */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 divide-x divide-ember-card-border border-y border-ember-card-border">
         <StatCard label="Logged days" value={String(stats.loggedDays)} />
         <StatCard
           label="Log rate"

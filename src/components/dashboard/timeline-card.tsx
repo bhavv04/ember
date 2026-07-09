@@ -9,60 +9,57 @@ export function TimelineCard({ projectedDate, avgDailyDeficit, daysRemaining }: 
   const monthsRemaining = (daysRemaining / 30.4).toFixed(1)
 
   const pace =
-    avgDailyDeficit >= 700 ? { label: "Aggressive", color: "text-ember-amber", bg: "bg-ember-amber/10" } :
-    avgDailyDeficit >= 400 ? { label: "On track",   color: "text-ember-forest", bg: "bg-ember-forest-pale" } :
-    avgDailyDeficit >= 200 ? { label: "Moderate",   color: "text-ember-amber", bg: "bg-ember-amber/10" } :
-    { label: "Slow", color: "text-ember-muted", bg: "bg-ember-forest-pale" }
+    avgDailyDeficit >= 700 ? { label: "Aggressive" } :
+    avgDailyDeficit >= 400 ? { label: "On track" } :
+    avgDailyDeficit >= 200 ? { label: "Moderate" } :
+    { label: "Slow" }
 
   return (
-    <div className="bg-ember-forest rounded-3xl p-8 flex flex-col h-full">
-
-      <p className="uppercase tracking-[0.18em] text-xs text-ember-forest-text mb-6">Projected date</p>
-
+    <div className="bg-ember-forest px-8 py-10 ">
       {/* Main date */}
-      <div className="mb-6">
-        <p className="text-2xl text-[#f7f3ea] tracking-tight leading-none">{projectedDate}</p>
-        <p className="text-xs text-ember-forest-muted mt-2">at your current pace</p>
-      </div>
+      <p className="uppercase tracking-[0.18em] text-xs text-ember-forest-text mb-4">
+        Projected date
+      </p>
+      <p className="text-3xl text-[#f7f3ea] tracking-tight leading-none mb-3">
+        {projectedDate}
+      </p>
 
-      {/* Pace badge */}
-      <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-xl w-fit mb-6 bg-white/10`}>
-        <div className="w-1.5 h-1.5 rounded-full bg-ember-amber" />
-        <span className="text-xs text-[#f7f3ea]">{pace.label}</span>
-        <span className="text-xs text-ember-forest-muted">·</span>
-        <span className="text-xs text-ember-forest-muted">{Math.round(avgDailyDeficit)} kcal/day</span>
-      </div>
+      {/* Pace badge — bracket style */}
+      <p className="text-xs text-ember-forest-muted mb-6">
+        <span className="text-ember-amber">[ {pace.label.toUpperCase()} ]</span>{" "}
+        · {Math.round(avgDailyDeficit)} kcal/day
+      </p>
 
       {/* Time breakdown */}
-      <div className="bg-white/5 rounded-2xl p-5 space-y-2 mb-6">
-        <p className="uppercase tracking-[0.15em] text-xs text-ember-forest-muted mb-3">Time remaining</p>
+      <div className="space-y-1.5 py-5 border-y border-white/10 mb-6">
         {[
-          { label: "Days",   value: daysRemaining.toLocaleString() },
-          { label: "Weeks",  value: weeksRemaining },
+          { label: "Days", value: daysRemaining.toLocaleString() },
+          { label: "Weeks", value: weeksRemaining },
           { label: "Months", value: monthsRemaining },
         ].map(({ label, value }) => (
           <div key={label} className="flex justify-between text-sm">
-            <span className="text-ember-forest-muted">{label}</span>
-            <span className="text-[#f7f3ea]">{value}</span>
+            <span className="text-ember-forest-muted uppercase text-xs tracking-wide">{label}</span>
+            <span className="text-[#f7f3ea] tabular-nums">{value}</span>
           </div>
         ))}
       </div>
 
       {/* What if */}
-      <div className="mt-auto space-y-2">
-        <p className="uppercase tracking-[0.15em] text-xs text-ember-forest-muted mb-3">What if</p>
+      <p className="uppercase tracking-[0.15em] text-xs text-ember-forest-muted mb-3">
+        What if
+      </p>
+      <div className="space-y-1.5">
         {[
           { label: "300 kcal/day", days: Math.ceil((daysRemaining * avgDailyDeficit) / 300) },
           { label: "500 kcal/day", days: Math.ceil((daysRemaining * avgDailyDeficit) / 500) },
           { label: "700 kcal/day", days: Math.ceil((daysRemaining * avgDailyDeficit) / 700) },
         ].map((s) => (
-          <div key={s.label} className="flex justify-between text-sm py-1.5 border-b border-white/10 last:border-0">
+          <div key={s.label} className="flex justify-between text-sm">
             <span className="text-ember-forest-muted">{s.label}</span>
-            <span className="text-[#f7f3ea]">{s.days} days</span>
+            <span className="text-[#f7f3ea] tabular-nums">{s.days} days</span>
           </div>
         ))}
       </div>
-
     </div>
   )
 }

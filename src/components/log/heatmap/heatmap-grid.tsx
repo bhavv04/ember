@@ -60,10 +60,10 @@ function Tooltip({ state }: { state: TooltipState }) {
   return (
     <div
       ref={ref}
-      className="fixed z-50 pointer-events-none bg-ember-card border border-ember-card-border rounded-2xl px-4 py-3 text-xs min-w-[160px]"
+      className="fixed z-50 pointer-events-none bg-ember-card border border-ember-card-border px-4 py-3 text-xs min-w-[160px] font-mono"
       style={{ left: pos.left, top: pos.top }}
     >
-      <p className="text-ember-ink mb-2">
+      <p className="text-ember-ink mb-2 uppercase tracking-wide text-[11px]">
         {cell.date.toLocaleDateString("en-CA", { weekday: "short", month: "short", day: "numeric", year: "numeric" })}
       </p>
       {cell.isFuture ? (
@@ -72,11 +72,11 @@ function Tooltip({ state }: { state: TooltipState }) {
         <div className="space-y-1">
           <div className="flex justify-between gap-6">
             <span className="text-ember-muted">Eaten</span>
-            <span className="text-ember-ink">{log.caloriesEaten.toLocaleString()} kcal</span>
+            <span className="text-ember-ink tabular-nums">{log.caloriesEaten.toLocaleString()} kcal</span>
           </div>
           <div className="flex justify-between gap-6 pt-1 border-t border-ember-card-border">
             <span className="text-ember-muted">Net</span>
-            <span className={deficitColor}>{sign}{log.netDeficit.toLocaleString()} kcal</span>
+            <span className={`tabular-nums ${deficitColor}`}>{sign}{log.netDeficit.toLocaleString()} kcal</span>
           </div>
         </div>
       ) : (

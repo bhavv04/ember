@@ -33,29 +33,31 @@ export default function WeighInPage() {
   const remaining = goal && current ? (current - goal.targetWeightKg).toFixed(1) : null
 
   return (
-    <div className="min-h-screen">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 pt-12 pb-10 space-y-4">
+    <div className="min-h-screen bg-ember-page">
+      <div className="max-w-5xl mx-auto px-6 sm:px-10 py-12 sm:py-12">
 
         {/* Header */}
-        <div className="flex items-start justify-between pb-2">
+        <div className="flex items-start justify-between pb-8 mb-8 border-b border-ember-card-border">
           <div>
-            <p className="uppercase tracking-[0.18em] text-xs text-ember-muted mb-1">Body</p>
-            <h1 className="text-2xl text-ember-ink tracking-tight">Weigh in</h1>
-            <p className="text-sm text-ember-muted mt-1">
+            <p className=" text-ember-muted mb-2">Body</p>
+            <h1 className="text-3xl font-semibold text-ember-ink">Weigh in</h1>
+            <p className="text-sm text-ember-muted mt-1 ">
               Weekly weigh-ins recalibrate your TDEE automatically
             </p>
           </div>
-          <p className="text-xs text-ember-muted mt-1">
+          <p className="text-xs  text-ember-muted mt-1">
             {new Date().toLocaleDateString("en-CA", { weekday: "short", month: "short", day: "numeric" })}
           </p>
         </div>
 
         {/* Top row */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pb-8 mb-8 border-b border-ember-card-border">
 
           {/* Form */}
-          <div className="md:col-span-2 bg-ember-card border border-ember-card-border rounded-3xl p-8">
-            <p className="uppercase tracking-[0.18em] text-xs text-ember-muted mb-6">New entry</p>
+          <div className="md:col-span-2">
+            <h2 className="text-sm text-ember-muted mb-5">
+              Fig. 01 — New entry
+            </h2>
             <WeightForm
               baselineTdee={goal?.baselineTdee}
               onSaved={handleSaved}
@@ -63,38 +65,47 @@ export default function WeighInPage() {
           </div>
 
           {/* Stats */}
-          <div className="flex flex-col gap-3">
-            {fetching ? (
-              <>
-                {[...Array(4)].map((_, i) => (
-                  <div key={i} className="bg-ember-card border border-ember-card-border rounded-2xl px-5 py-4 flex-1 animate-pulse">
-                    <div className="h-2 w-16 bg-ember-forest-pale rounded-full mb-3" />
-                    <div className="h-6 w-20 bg-ember-forest-pale rounded-full" />
-                  </div>
-                ))}
-              </>
-            ) : goal ? (
-              <>
-                {[
-                  { label: "Start",   value: `${goal.startWeightKg} kg`,          color: "text-ember-ink"   },
-                  { label: "Current", value: current ? `${current} kg` : "—",      color: "text-ember-amber" },
-                  { label: "Lost",    value: lost ? `−${lost} kg` : "—",           color: "text-ember-forest"},
-                  { label: "To go",   value: remaining ? `${remaining} kg` : "—",  color: "text-ember-ink"   },
-                ].map((s) => (
-                  <div key={s.label} className="bg-ember-card border border-ember-card-border rounded-2xl px-5 py-4 flex-1">
-                    <p className="text-[11px] uppercase tracking-[0.15em] text-ember-muted mb-1">{s.label}</p>
-                    <p className={`text-xl tabular-nums ${s.color}`}>{s.value}</p>
-                  </div>
-                ))}
-              </>
-            ) : null}
+          <div>
+            <h2 className="text-sm text-ember-muted mb-5">
+              Fig. 02 — Stats
+            </h2>
+            <div className="flex flex-col divide-y divide-ember-card-border border-y border-ember-card-border ">
+              {fetching ? (
+                <>
+                  {[...Array(4)].map((_, i) => (
+                    <div key={i} className="px-1 py-3 animate-pulse">
+                      <div className="h-2 w-16 bg-ember-card-border mb-3" />
+                      <div className="h-5 w-20 bg-ember-card-border" />
+                    </div>
+                  ))}
+                </>
+              ) : goal ? (
+                <>
+                  {[
+                    { label: "Start",   value: `${goal.startWeightKg} kg` },
+                    { label: "Current", value: current ? `${current} kg` : "—", accent: true },
+                    { label: "Lost",    value: lost ? `−${lost} kg` : "—" },
+                    { label: "To go",   value: remaining ? `${remaining} kg` : "—" },
+                  ].map((s) => (
+                    <div key={s.label} className="px-1 py-3">
+                      <p className="text-sm text-ember-muted mb-1">{s.label}</p>
+                      <p className={`text-xl tabular-nums ${s.accent ? "text-ember-amber" : "text-ember-ink"}`}>
+                        {s.value}
+                      </p>
+                    </div>
+                  ))}
+                </>
+              ) : null}
+            </div>
           </div>
         </div>
 
         {/* Chart */}
         {!fetching && goal && history.length >= 2 && (
-          <div className="bg-ember-card border border-ember-card-border rounded-3xl p-8">
-            <p className="uppercase tracking-[0.18em] text-xs text-ember-muted mb-6">Trend</p>
+          <div className="pb-8 mb-8 border-b border-ember-card-border">
+            <h2 className="text-sm text-ember-muted mb-5">
+              Fig. 03 — Trend
+            </h2>
             <WeightChart
               history={history}
               startWeightKg={goal.startWeightKg}
@@ -105,8 +116,10 @@ export default function WeighInPage() {
 
         {/* History */}
         {!fetching && (
-          <div className="bg-ember-card border border-ember-card-border rounded-3xl p-8">
-            <p className="uppercase tracking-[0.18em] text-xs text-ember-muted mb-6">History</p>
+          <div>
+            <h2 className="text-sm text-ember-muted mb-5">
+              Fig. 04 — History
+            </h2>
             <WeightHistory history={history} />
           </div>
         )}

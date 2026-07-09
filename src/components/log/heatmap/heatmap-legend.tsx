@@ -1,7 +1,7 @@
 export function HeatmapLegend() {
   return (
-    <div className="flex items-center gap-1.5 pt-3 border-t border-ember-card-border flex-wrap">
-      <span className="text-[11px] text-ember-muted">Less</span>
+    <div className="flex items-center gap-1.5 pt-3 border-t border-ember-card-border flex-wrap font-mono">
+      <span className="text-[11px] text-ember-muted uppercase tracking-wide">Less</span>
       {[
         "bg-ember-forest-pale",
         "bg-ember-forest-mid",
@@ -10,7 +10,7 @@ export function HeatmapLegend() {
       ].map((c) => (
         <div key={c} className={`w-2.5 h-2.5 rounded-sm shrink-0 ${c}`} />
       ))}
-      <span className="text-[11px] text-ember-muted mr-1">More</span>
+      <span className="text-[11px] text-ember-muted mr-1 uppercase tracking-wide">More</span>
 
       <div className="w-px h-3 bg-ember-card-border mx-0.5" />
 
